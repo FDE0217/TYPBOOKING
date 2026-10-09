@@ -1002,13 +1002,26 @@
             document.getElementById('loadingDestination').textContent = destination;
             document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
 
-            // Simulate API delay
-            setTimeout(() => {
-                generateResults(destination, checkin, checkout, guests);
-            }, 2000);
+            const code = (s) => { const m = /\(([A-Z]{3})\)/.exec(s || ''); return m ? m[1] : ''; };
+            const qs = new URLSearchParams({
+                mode: currentSearchMode,
+                origin: code(originVal),
+                dest: code(destVal),
+                checkin, checkout: checkout || '', guests,
+                rooms: document.getElementById('rooms').value || 1
+            });
+            const lookup = currentSearchMode === 'ride'
+                ? Promise.resolve(null)
+                : fetch('/.netlify/functions/search-prices?' + qs)
+                    .then(r => r.ok ? r.json() : null)
+                    .catch(() => null);
+            const minDelay = new Promise(r => setTimeout(r, 1500));
+            Promise.all([lookup, minDelay]).then(([live]) => {
+                generateResults(destination, checkin, checkout, guests, live);
+            });
         });
 
-        function generateResults(destination, checkin, checkout, guests) {
+        function generateResults(destination, checkin, checkout, guests, live) {
             document.getElementById('loadingState').classList.add('hidden');
             document.getElementById('resultsData').classList.remove('hidden');
 
@@ -1033,14 +1046,19 @@
             else if (currentSearchMode === 'hotels') basePriceUSD *= 0.4;
             else if (currentSearchMode === 'ride') basePriceUSD *= 0.15;
 
+            // Live Amadeus fare becomes the cheapest tier; other tiers scale up from it.
+            const isLive = !!(live && live.totalUSD > 0);
+            if (isLive) basePriceUSD = live.totalUSD / 0.85;
+
             currentQuotes = packageOptions.map((pkg, index) => {
-                // Clearly labeled sample cost tiers; no random price changes between searches.
                 const multiplier = [0.85, 1.00, 1.12, 1.28, 0.93][index];
                 const netBasePrice = basePriceUSD * multiplier;
                 const pricing = calculateSellingPrice(netBasePrice);
                 return {
                     ...pkg,
-                    priceSource: 'DEMO ESTIMATE — NOT LIVE',
+                    priceSource: isLive
+                        ? `LIVE ${live.source} (${live.environment})`
+                        : 'DEMO ESTIMATE — NOT LIVE',
                     basePriceUSD: pricing.netCost,
                     originalBasePriceUSD: pricing.netCost,
                     markupUSD: pricing.profit,
