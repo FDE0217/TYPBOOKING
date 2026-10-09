@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TYP Explore Travel & Tours</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Load FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            300: '#5eead4',
+                            500: '#14b8a6', // Teal 500
+                            600: '#0d9488',
+                            700: '#0f766e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Custom scrollbar and animations */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #14b8a6;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0d9488;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .bounce-delay-1 { animation-delay: 0.1s; }
+        .bounce-delay-2 { animation-delay: 0.2s; }
+        .bounce-delay-3 { animation-delay: 0.3s; }
+        
+        /* Modal Animation */
+        .modal-enter {
+            animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-gray-50 antialiased flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur shadow-sm sticky top-0 z-40 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <div class="flex items-center gap-3 cursor-pointer">
+                    <img src="Logo Update White Inner Background.jpg" alt="TYP Explore Travel & Tours Logo" class="h-14 w-auto rounded-full border border-gray-100 shadow-sm" onerror="this.src='https://placehold.co/100x100/14b8a6/white?text=TYP'">
+                    <span class="font-bold text-2xl tracking-tight text-gray-900 hidden sm:block">
+                        TYP<span class="text-primary-500">Explore</span>
+                    </span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-gray-600 hover:text-primary-500 font-medium transition-colors">Home</a>
+                    <a href="#" class="text-gray-600 hover:text-primary-500 font-medium transition-colors">Destinations</a>
+                    <a href="#" class="text-gray-600 hover:text-primary-500 font-medium transition-colors">Packages</a>
+                    <button class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2.5 rounded-full font-medium transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                        Contact Support
+                    </button>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <!-- Currency Selector -->
+                    <select id="currencySelector" class="bg-gray-50 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2.5 cursor-pointer outline-none shadow-sm transition-shadow">
+                        <option value="PHP" selected>PHP (₱)</option>
+                        <option value="USD">USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="JPY">JPY (¥)</option>
+                    </select>
+                    
+                    <!-- Admin Toggle Lock Icon -->
+                    <button id="adminToggle" class="text-gray-300 hover:text-gray-600 focus:outline-none transition-colors" title="Toggle Admin Mode">
+                        <i class="fa-solid fa-lock text-lg" id="adminIcon"></i>
+                    </button>
+
+                    <!-- Mobile Menu Button -->
+                    <button class="md:hidden text-gray-600 hover:text-primary-500 focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+        <section class="relative bg-gray-900 h-[650px] lg:h-[750px] flex items-center justify-center">
+            <!-- Background Image -->
+            <div class="absolute inset-0 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1499678329028-101435549a4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Beautiful Travel Destination" class="w-full h-full object-cover object-center opacity-70" />
+                <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent"></div>
+            </div>
+
+            <div class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center mt-[-80px]">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 drop-shadow-lg">
+                    Find Your Perfect Getaway
+                </h1>
+                <p class="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto drop-shadow">
+                    Compare global prices and book the most affordable flights, hotels, and comprehensive travel packages.
+                </p>
+
+                <!-- Category Selection Grid -->
+                <div class="flex flex-wrap justify-center gap-3 sm:gap-4 mb-6">
+                    <button type="button" class="category-tab group w-24 h-24 sm:w-28 sm:h-28 bg-white/95 backdrop-blur rounded-2xl shadow-lg hover:shadow-xl transition-all border-2 border-transparent hover:border-primary-300 flex flex-col items-center justify-center gap-2" data-type="flights">
+                        <div class="text-3xl text-green-500 group-hover:-translate-y-1 transition-transform"><i class="fa-solid fa-plane-departure"></i></div>
+                        <span class="font-bold text-gray-800 text-sm">Flights</span>
+                    </button>
+                    
+                    <button type="button" class="category-tab active group w-24 h-24 sm:w-28 sm:h-28 bg-white/95 backdrop-blur rounded-2xl shadow-lg hover:shadow-xl transition-all border-2 border-primary-500 flex flex-col items-center justify-center gap-1" data-type="snap">
+                        <div class="text-3xl text-green-500 flex gap-1 group-hover:-translate-y-1 transition-transform">
+                            <i class="fa-solid fa-plane"></i><i class="fa-solid fa-bed"></i>
+                        </div>
+                        <span class="font-bold text-gray-800 text-sm leading-tight mt-1">SNAP!<br><span class="text-xs font-medium text-gray-500">Flight+Hotel</span></span>
+                    </button>
+
+                    <button type="button" class="category-tab group w-24 h-24 sm:w-28 sm:h-28 bg-white/95 backdrop-blur rounded-2xl shadow-lg hover:shadow-xl transition-all border-2 border-transparent hover:border-primary-300 flex flex-col items-center justify-center gap-2" data-type="hotels">
+                        <div class="text-3xl text-green-500 group-hover:-translate-y-1 transition-transform"><i class="fa-solid fa-bed"></i></div>
+                        <span class="font-bold text-gray-800 text-sm">Hotels</span>
+                    </button>
+
+                    <button type="button" class="category-tab group w-24 h-24 sm:w-28 sm:h-28 bg-white/95 backdrop-blur rounded-2xl shadow-lg hover:shadow-xl transition-all border-2 border-transparent hover:border-primary-300 flex flex-col items-center justify-center gap-1" data-type="ride">
+                        <div class="text-3xl text-green-500 group-hover:-translate-y-1 transition-transform mt-1"><i class="fa-solid fa-car-side"></i></div>
+                        <span class="font-bold text-gray-800 text-sm leading-tight mt-1">Ride<br><span class="text-xs font-medium text-gray-500">Airport only</span></span>
+                    </button>
+                </div>
+
+                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-2xl text-left border border-gray-100 transition-all duration-300">
+                    <form id="searchForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 items-end">
+                        
+                        <!-- Origin Input -->
+                        <div class="lg:col-span-2 form-group-origin">
+                            <label for="origin" id="label-origin" class="block text-sm font-semibold text-gray-700 mb-2">Origin</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fa-solid fa-location-arrow text-gray-400"></i>
+                                </div>
+                                <input type="text" id="origin" name="origin" required placeholder="Where from?" value="Manila (MNL)" autocomplete="off"
+                                    class="w-full pl-10 pr-3 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-shadow outline-none text-gray-700">
+                                <div id="origin-dropdown" class="absolute z-50 w-full bg-white border border-gray-200 rounded-lg shadow-xl mt-1 hidden max-h-60 overflow-y-auto"></div>
+                            </div>
+                        </div>
+
+                        <!-- Destination Input -->
+                        <div class="lg:col-span-2 form-group-destination">
+                            <label for="destination" id="label-destination" class="block text-sm font-semibold text-gray-700 mb-2">Destination</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fa-solid fa-location-dot text-gray-400"></i>
+                                </div>
+                                <input type="text" id="destination" name="destination" required placeholder="Where to?" autocomplete="off"
+                                    class="w-full pl-10 pr-3 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-shadow outline-none text-gray-700">
+                                <div id="destination-dropdown" class="absolute z-50 w-full bg-white border border-gray-200 rounded-lg shadow-xl mt-1 hidden max-h-60 overflow-y-auto"></div>
+                            </div>
+                        </div>
+
+                        <!-- Date Inputs -->
+                        <div class="lg:col-span-1 form-group-date">
+                            <label for="checkin" id="label-checkin" class="block text-sm font-semibold text-gray-700 mb-2">Departure</label>
+                            <input type="date" id="checkin" name="checkin" required
+                                class="w-full px-2 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-shadow outline-none text-gray-700 text-sm">
+                        </div>
+
+                        <div class="lg:col-span-1 form-group-date-return">
+                            <label for="checkout" id="label-checkout" class="block text-sm font-semibold text-gray-700 mb-2">Return</label>
+                            <input type="date" id="checkout" name="checkout" required
+                                class="w-full px-2 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-shadow outline-none text-gray-700 text-sm">
+                        </div>
+
+                        <!-- Guests Input -->
+                        <div class="lg:col-span-1 form-group-guests">
+                            <label for="guests" id="label-guests" class="block text-sm font-semibold text-gray-700 mb-2">Guests</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fa-solid fa-user-group text-gray-400"></i>
+                                </div>
+                                <input type="number" id="guests" name="guests" min="1" max="20" value="2" required
+                                    class="w-full pl-10 pr-3 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-shadow outline-none text-gray-700">
+                            </div>
+                        </div>
+
+                        <!-- Rooms Input (Hidden conditionally) -->
+                        <div class="lg:col-span-1 form-group-rooms">
+                            <label for="rooms" class="block text-sm font-semibold text-gray-700 mb-2">Rooms</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fa-solid fa-door-closed text-gray-400"></i>
+                                </div>
+                                <input type="number" id="rooms" name="rooms" min="1" max="10" value="1"
+                                    class="w-full pl-10 pr-3 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-shadow outline-none text-gray-700">
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="lg:col-span-4 mt-2 form-group-submit">
+                            <button type="submit" id="submitBtn" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:shadow-xl transition-all h-[50px] flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                Search <span id="searchBtnText">Flight + Hotel</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="resultsSection" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 hidden">
+            
+            <!-- Loading Spinner State -->
+            <div id="loadingState" class="flex flex-col items-center justify-center py-20 hidden fade-in">
+                <div class="flex space-x-2 mb-6">
+                    <div class="w-4 h-4 bg-primary-500 rounded-full animate-bounce"></div>
+                    <div class="w-4 h-4 bg-primary-500 rounded-full animate-bounce bounce-delay-1"></div>
+                    <div class="w-4 h-4 bg-primary-500 rounded-full animate-bounce bounce-delay-2"></div>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2 text-center">Finding the best rates...</h3>
+                <p class="text-gray-500 text-center max-w-md">
+                    Comparing options across our premium networks for <strong id="loadingDestination" class="text-primary-600"></strong>.
+                </p>
+            </div>
+
+            <!-- Actual Results Data -->
+            <div id="resultsData" class="hidden fade-in">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-8 border-b pb-4">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Exclusive Deals Found</h2>
+                        <p class="text-gray-600">
+                            Displaying packages for <strong id="resDest" class="text-gray-900"></strong> 
+                            (<span id="resDates" class="text-gray-700 font-medium"></span>) - 
+                            <span id="resGuests" class="text-gray-700 font-medium"></span> Guest(s)
+                        </p>
+                    </div>
+                    <div class="mt-4 md:mt-0 flex items-center text-sm font-medium text-green-700 bg-green-50 px-4 py-2 rounded-lg border border-green-100">
+                        <i class="fa-solid fa-tags mr-2"></i> TYP Best Price Guarantee
+                    </div>
+                </div>
+
+                <div id="cardsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Javascript will populate mock results here -->
+                </div>
+            </div>
+        </section>
+
+        <div id="checkoutModalOverlay" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 transition-opacity opacity-0">
+            <div id="checkoutModalContent" class="bg-gray-50 rounded-2xl w-full max-w-6xl shadow-2xl overflow-hidden transform scale-95 transition-all flex flex-col max-h-[95vh]">
+                
+                <!-- Header -->
+                <div class="bg-white px-6 py-4 border-b flex justify-between items-center shrink-0 shadow-sm z-10">
+                    <h3 class="text-xl font-bold text-gray-900"><i class="fa-solid fa-wand-magic-sparkles text-primary-500 mr-2"></i> Customize & Book Trip</h3>
+                    <button onclick="closeCheckoutModal()" class="text-gray-400 hover:text-red-500 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-50">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Form Body -->
+                <div id="checkoutFormContainer" class="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar">
+                    <form id="checkoutForm" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        
+                        <!-- Left Column: Customization & Passengers -->
+                        <div class="lg:col-span-2 space-y-6">
+                            
+                            <!-- Trip Summary Bar -->
+                            <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row justify-between md:items-center gap-4">
+                                <div>
+                                    <h4 class="font-bold text-gray-900 text-lg" id="modalDestTitle">Destination</h4>
+                                    <p class="text-sm text-gray-500" id="modalDatesText">Dates</p>
+                                </div>
+                                <div class="bg-primary-50 px-4 py-2 rounded-lg border border-primary-100">
+                                    <p class="text-xs text-primary-700 font-bold uppercase tracking-wider mb-0.5">Selected Package</p>
+                                    <p class="text-sm font-semibold text-gray-900" id="modalPackageName">Package Name</p>
+                                </div>
+                            </div>
+
+                            <!-- Dynamic Customization Section -->
+                            <div id="customizationSection" class="space-y-6">
+                                <!-- Flights Section -->
+                                <div id="flightSelectionBlock" class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                                    <h4 class="text-base font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                        <i class="fa-solid fa-plane-departure text-primary-500"></i> Select Departure Flight
+                                    </h4>
+                                    <div class="space-y-3" id="flightOptionsContainer">
+                                        <!-- Populated by JS -->
+                                    </div>
+                                </div>
+
+                                <!-- Add-ons Section -->
+                                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                                    <h4 class="text-base font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                        <i class="fa-solid fa-suitcase-rolling text-primary-500"></i> Trip Add-ons
+                                    </h4>
+                                    
+                                    <div class="space-y-4 mb-2">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Baggage Allowance (Per Passenger)</label>
+                                            <select id="baggageSelect" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none text-sm pricing-trigger">
+                                                <!-- Populated by JS -->
+                                            </select>
+                                        </div>
+                                        
+                                        <div id="transferContainer">
+                                            <!-- Populated by JS -->
+                                        </div>
+                                    </div>
+
+                                    <hr class="my-6 border-gray-100">
+
+                                    <h5 class="text-base font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                        <i class="fa-solid fa-map-location-dot text-primary-500"></i> Available Tours & Activities
+                                    </h5>
+                                    <div class="space-y-4" id="toursContainer">
+                                        <!-- Populated by JS based on destination -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Passenger Details -->
+                            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                                <h4 class="text-base font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                    <i class="fa-solid fa-users text-primary-500"></i> Passenger Details
+                                </h4>
+                                
+                                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-4">
+                                    <h5 class="text-sm font-bold text-gray-800 mb-3">Primary Contact</h5>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-xs font-medium text-gray-700 mb-1">Email Address</label>
+                                            <input type="email" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-primary-500 outline-none text-sm" placeholder="john@example.com">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-medium text-gray-700 mb-1">Phone Number</label>
+                                            <input type="tel" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-primary-500 outline-none text-sm" placeholder="+63 900 000 0000">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 flex items-center justify-between">
+                                    <label class="block text-sm font-bold text-gray-800">Number of Travelers</label>
+                                    <input type="number" id="modalTravelersCount" min="1" max="20" value="2" required class="w-20 px-2 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none text-center pricing-trigger">
+                                </div>
+                                <div id="passengersContainer" class="space-y-3">
+                                    <!-- Populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Sticky Pricing Summary -->
+                        <div class="lg:col-span-1">
+                            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-xl lg:sticky lg:top-4">
+                                <h4 class="text-lg font-bold text-gray-900 border-b border-gray-100 pb-3 mb-4">Price Summary</h4>
+                                
+                                <div class="space-y-3 text-sm text-gray-600 mb-4" id="summaryBreakdown">
+                                    <div class="flex justify-between">
+                                        <span>Base Package</span>
+                                        <span id="sumBasePrice" class="font-medium text-gray-900">$0.00</span>
+                                    </div>
+                                    <div class="flex justify-between hidden" id="sumFlightRow">
+                                        <span>Flight Selection</span>
+                                        <span id="sumFlightPrice" class="font-medium text-gray-900">$0.00</span>
+                                    </div>
+                                    <div class="flex justify-between hidden" id="sumBaggageRow">
+                                        <span>Extra Baggage</span>
+                                        <span id="sumBaggagePrice" class="font-medium text-gray-900">$0.00</span>
+                                    </div>
+                                    <div class="flex justify-between hidden" id="sumTransferRow">
+                                        <span>Transfers</span>
+                                        <span id="sumTransferPrice" class="font-medium text-gray-900">$0.00</span>
+                                    </div>
+                                    <div class="flex justify-between hidden" id="sumToursRow">
+                                        <span>Tours & Activities</span>
+                                        <span id="sumToursPrice" class="font-medium text-gray-900">$0.00</span>
+                                    </div>
+                                </div>
+
+                                <div class="border-t border-gray-200 pt-4 mb-6">
+                                    <div class="flex justify-between items-end mb-1">
+                                        <span class="font-bold text-gray-900 text-base">Total Due</span>
+                                        <span id="modalFinalTotal" class="text-2xl font-extrabold text-primary-600">$0.00</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500 text-right">Inclusive of taxes and fees</p>
+                                </div>
+
+                                <!-- Admin Breakdown Block -->
+                                <div id="adminModalBreakdown" class="hidden mb-6 p-3 bg-gray-50 rounded-lg text-xs font-mono border border-dashed border-gray-300">
+                                    <div class="font-bold text-gray-700 mb-2 border-b border-gray-200 pb-1">ADMIN LIVE MARGIN</div>
+                                    <div class="flex justify-between mb-1 text-gray-600">
+                                        <span>Total Net Cost:</span> <span id="adminNetTotal">$0.00</span>
+                                    </div>
+                                    <div class="flex justify-between text-green-600 font-bold">
+                                        <span>TYP Profit (15% selling-price margin):</span> <span id="adminMarginTotal">+$0.00</span>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Payment Preference</label>
+                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none text-sm mb-4">
+                                        <option>Credit/Debit Card</option>
+                                        <option>PayPal</option>
+                                        <option>Bank Transfer</option>
+                                        <option>Gcash / E-Wallet</option>
+                                    </select>
+                                </div>
+                                
+                                <button type="submit" class="w-full py-3.5 bg-primary-500 hover:bg-primary-600 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all flex justify-center items-center gap-2">
+                                    <i class="fa-solid fa-lock"></i> Confirm & Book
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Simulating API Booking State (Hidden initially) -->
+                <div id="checkoutSimulatingState" class="p-12 text-center hidden flex-col items-center justify-center flex-1">
+                    <div class="w-20 h-20 border-4 border-gray-100 border-t-primary-500 rounded-full animate-spin mx-auto mb-6"></div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2 transition-all duration-300" id="simulatingText">Connecting to partner platforms...</h3>
+                    <p class="text-gray-500 mt-2">Securing your selected flights and tours. Please do not refresh.</p>
+                </div>
+
+                <!-- Success State (Hidden initially) -->
+                <div id="checkoutSuccessState" class="p-12 text-center hidden flex-col justify-center items-center flex-1 bg-white">
+                    <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 fade-in">
+                        <i class="fa-solid fa-check text-5xl text-green-500"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-gray-900 mb-3">Booking Confirmed!</h3>
+                    <p class="text-gray-600 mb-8 max-w-md mx-auto text-lg">Your customized travel itinerary has been secured. Our team will send the final documents to your email shortly.</p>
+                    <button onclick="closeCheckoutModal()" class="px-8 py-3 bg-gray-900 hover:bg-gray-800 text-white font-bold rounded-lg transition-colors shadow-lg">
+                        Return to Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-gray-900 text-white pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <div class="md:col-span-1">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="font-bold text-xl tracking-tight">
+                            TYP<span class="text-primary-500">Explore</span>
+                        </span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Your trusted partner for the best travel deals globally.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 text-gray-100">Company</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-primary-500 transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-primary-500 transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 text-gray-100">Legal</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-primary-500 transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-primary-500 transition-colors">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
+                &copy; 2026 TYP Explore Travel & Tours. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Generic Package Names (Privacy requirement: No source sites shown)
+        const packageOptions = [
+            { name: 'Super Saver Package', icon: 'fa-tag', color: 'text-green-600', bg: 'bg-green-50' },
+            { name: 'Standard Deal', icon: 'fa-box', color: 'text-blue-500', bg: 'bg-blue-50' },
+            { name: 'Comfort Choice', icon: 'fa-mug-hot', color: 'text-orange-500', bg: 'bg-orange-50' },
+            { name: 'Premium Getaway', icon: 'fa-gem', color: 'text-purple-600', bg: 'bg-purple-50' },
+            { name: 'Last Minute Value', icon: 'fa-bolt', color: 'text-yellow-500', bg: 'bg-yellow-50' }
+        ];
+
+        const airportData = [
+            { city: 'Manila', country: 'Philippines', name: 'Ninoy Aquino International Airport', code: 'MNL' },
+            { city: 'Clark', country: 'Philippines', name: 'Clark International Airport', code: 'CRK' },
+            { city: 'Cebu', country: 'Philippines', name: 'Mactan-Cebu International Airport', code: 'CEB' },
+            { city: 'Boracay (Caticlan)', country: 'Philippines', name: 'Godofredo P. Ramos Airport', code: 'MPH' },
+            { city: 'Boracay (Kalibo)', country: 'Philippines', name: 'Kalibo International Airport', code: 'KLO' },
+            { city: 'Puerto Princesa (Palawan)', country: 'Philippines', name: 'Puerto Princesa International Airport', code: 'PPS' },
+            { city: 'Davao', country: 'Philippines', name: 'Francisco Bangoy International Airport', code: 'DVO' },
+            { city: 'Bangkok', country: 'Thailand', name: 'Suvarnabhumi Airport', code: 'BKK' },
+            { city: 'Bangkok', country: 'Thailand', name: 'Don Mueang International Airport', code: 'DMK' },
+            { city: 'Tokyo', country: 'Japan', name: 'Narita International Airport', code: 'NRT' },
+            { city: 'Tokyo', country: 'Japan', name: 'Haneda Airport', code: 'HND' },
+            { city: 'Singapore', country: 'Singapore', name: 'Changi Airport', code: 'SIN' },
+            { city: 'Hong Kong', country: 'Hong Kong', name: 'Hong Kong International Airport', code: 'HKG' },
+            { city: 'Seoul', country: 'South Korea', name: 'Incheon International Airport', code: 'ICN' },
+            { city: 'Taipei', country: 'Taiwan', name: 'Taoyuan International Airport', code: 'TPE' },
+            { city: 'Kuala Lumpur', country: 'Malaysia', name: 'Kuala Lumpur International Airport', code: 'KUL' },
+            { city: 'Dubai', country: 'United Arab Emirates', name: 'Dubai International Airport', code: 'DXB' },
+            { city: 'New York', country: 'United States', name: 'John F. Kennedy International Airport', code: 'JFK' },
+            { city: 'London', country: 'United Kingdom', name: 'Heathrow Airport', code: 'LHR' },
+            { city: 'Paris', country: 'France', name: 'Charles de Gaulle Airport', code: 'CDG' }
+        ];
+
+        // Currency configuration. In production, refresh rates from a trusted FX provider.
+        const exchangeRates = { USD: 1, PHP: 56.5, EUR: 0.92, JPY: 150 };
+
+        // Pricing policy: a true 15% margin means profit is 15% of the selling price,
+        // so selling price = net cost / (1 - 0.15). Do not add 15% to cost and call it margin.
+        const TYP_TARGET_MARGIN = 0.15;
+        function calculateSellingPrice(netCost) {
+            const cost = Math.max(0, Number(netCost) || 0);
+            const sellingPrice = cost / (1 - TYP_TARGET_MARGIN);
+            return { netCost: cost, sellingPrice, profit: sellingPrice - cost, marginRate: TYP_TARGET_MARGIN };
+        }
+
+        // Supplier adapter contract: map verified supplier API responses into this shape.
+        // Use final payable supplier amounts, including mandatory taxes/fees, and deduplicate fees.
+        // No live supplier connector is implemented in this standalone HTML prototype.
+        function normalizeSupplierQuote(apiQuote) {
+            if (!apiQuote || !Number.isFinite(Number(apiQuote.totalNetCost)) || Number(apiQuote.totalNetCost) <= 0) return null;
+            return {
+                source: apiQuote.source || 'Supplier',
+                totalNetCost: Number(apiQuote.totalNetCost),
+                currency: apiQuote.currency || 'USD',
+                expiresAt: apiQuote.expiresAt || null,
+                availabilityConfirmed: apiQuote.availabilityConfirmed === true,
+                breakdown: apiQuote.breakdown || {}
+            };
+        }
+        const currencyLocales = { USD: 'en-US', PHP: 'en-PH', EUR: 'de-DE', JPY: 'ja-JP' };
+        let currentCurrency = 'PHP';
+        let currentQuotes = [];
+        let currentDestination = '';
+        let currentStayDates = { checkin: '', checkout: '' };
+
+        // Demo hotel choices for the prototype only. Replace with platform/API-verified promo inventory before production.
+        // priceDeltaUSD is the net-cost difference for the whole package, before TYP's 15% margin.
+        const demoHotelInventory = {
+            boracay: [
+                { id: 'default', name: 'Promo Beach Hotel (Default)', priceDeltaUSD: 0, note: 'Default promo option', rating: '4.2/5', location: 'Boracay · location varies by supplier', room: 'Standard room · 1 room', breakfast: 'Not confirmed', amenities: ['Wi-Fi status not confirmed', 'Air conditioning', 'Private bathroom'], cancellation: 'Check supplier policy', checkin: 'Check-in time varies', checkout: 'Check-out time varies', taxes: 'Taxes/fees subject to supplier quote' },
+                { id: 'station2', name: 'Station 2 Beachfront Resort', priceDeltaUSD: 55, note: 'Beachfront location', rating: '4.3/5', location: 'Station 2 area · exact address subject to confirmation', room: 'Standard room · 1 room', breakfast: 'Not confirmed', amenities: ['Wi-Fi status not confirmed', 'Beach access may vary', 'Air conditioning'], cancellation: 'Check supplier policy', checkin: 'Check-in time varies', checkout: 'Check-out time varies', taxes: 'Taxes/fees subject to supplier quote' },
+                { id: 'station3', name: 'Station 3 Relaxed Stay', priceDeltaUSD: -25, note: 'Value option', rating: '4.1/5', location: 'Station 3 area · exact address subject to confirmation', room: 'Standard room · 1 room', breakfast: 'Not confirmed', amenities: ['Wi-Fi status not confirmed', 'Air conditioning', 'Private bathroom'], cancellation: 'Check supplier policy', checkin: 'Check-in time varies', checkout: 'Check-out time varies', taxes: 'Taxes/fees subject to supplier quote' },
+                { id: 'premium', name: 'Premium White Beach Resort', priceDeltaUSD: 110, note: 'Premium resort', rating: '4.5/5', location: 'White Beach area · exact address subject to confirmation', room: 'Premium room · 1 room', breakfast: 'Not confirmed', amenities: ['Wi-Fi status not confirmed', 'Pool availability varies', 'Air conditioning'], cancellation: 'Check supplier policy', checkin: 'Check-in time varies', checkout: 'Check-out time varies', taxes: 'Taxes/fees subject to supplier quote' }
+            ],
+            bangkok: [
+                { id: 'default', name: 'Promo City Hotel (Default)', priceDeltaUSD: 0, note: 'Default promo option', rating: '4.2/5', location: 'Bangkok · exact area/address subject to confirmation', room: 'Standard room · 1 room', breakfast: 'Not confirmed', amenities: ['Wi-Fi status not confirmed', 'Air conditioning', 'Private bathroom'], cancellation: 'Check supplier policy', checkin: 'Check-in time varies', checkout: 'Check-out time varies', taxes: 'Taxes/fees subject to supplier quote' },
+                { id: 'central', name: 'Central Bangkok Hotel', priceDeltaUSD: 35, note: 'Central location', rating: '4.3/5', location: 'Central Bangkok · exact address subject to confirmation', room: 'Standard room · 1 room', breakfast: 'Not confirmed', amenities: ['Wi-Fi status not confirmed', 'Air conditioning', 'Near transport (verify exact hotel)'], cancellation: 'Check supplier policy', checkin: 'Check-in time varies', checkout: 'Check-out time varies', taxes: 'Taxes/fees subject to supplier quote' },
+                { id: 'riverside', name: 'Riverside Comfort Hotel', priceDeltaUSD: 65, note: 'Riverside stay', rating: '4.1/5', location: 'Riverside area · exact address subject to confirmation', room: 'Comfort room · 1 room', breakfast: 'Not confirmed', amenities: ['Wi-Fi status not confirmed', 'Air conditioning', 'River view subject to room availability'], cancellation: 'Check supplier policy', checkin: 'Check-in time varies', checkout: 'Check-out time varies', taxes: 'Taxes/fees subject to supplier quote' },
+                { id: 'value', name: 'Bangkok Value Hotel', priceDeltaUSD: -30, note: 'Value option', rating: '4.5/5', location: 'Bangkok · exact area/address subject to confirmation', room: 'Standard room · 1 room', breakfast: 'Not confirmed', amenities: ['Wi-Fi status not confirmed', 'Air conditioning', 'Private bathroom'], cancellation: 'Check supplier policy', checkin: 'Check-in time varies', checkout: 'Check-out time varies', taxes: 'Taxes/fees subject to supplier quote' }
+            ],
+            other: [
+                { id: 'default', name: 'Promo Partner Hotel (Default)', priceDeltaUSD: 0, note: 'Default promo option', rating: '4.2/5', location: 'Destination area · exact address subject to confirmation', room: 'Standard room · 1 room', breakfast: 'Not confirmed', amenities: ['Wi-Fi status not confirmed', 'Air conditioning', 'Private bathroom'], cancellation: 'Check supplier policy', checkin: 'Check-in time varies', checkout: 'Check-out time varies', taxes: 'Taxes/fees subject to supplier quote' },
+                { id: 'comfort', name: 'Comfort Hotel', priceDeltaUSD: 40, note: 'Comfort option', rating: '4.3/5', location: 'Destination area · exact address subject to confirmation', room: 'Comfort room · 1 room', breakfast: 'Not confirmed', amenities: ['Wi-Fi status not confirmed', 'Air conditioning', 'Private bathroom'], cancellation: 'Check supplier policy', checkin: 'Check-in time varies', checkout: 'Check-out time varies', taxes: 'Taxes/fees subject to supplier quote' },
+                { id: 'premium', name: 'Premium Hotel', priceDeltaUSD: 95, note: 'Premium option', rating: '4.5/5', location: 'Destination area · exact address subject to confirmation', room: 'Premium room · 1 room', breakfast: 'Not confirmed', amenities: ['Wi-Fi status not confirmed', 'Pool/fitness facilities subject to property', 'Air conditioning'], cancellation: 'Check supplier policy', checkin: 'Check-in time varies', checkout: 'Check-out time varies', taxes: 'Taxes/fees subject to supplier quote' },
+                { id: 'value', name: 'Value Hotel', priceDeltaUSD: -20, note: 'Value option', rating: '4.1/5', location: 'Destination area · exact address subject to confirmation', room: 'Standard room · 1 room', breakfast: 'Not confirmed', amenities: ['Wi-Fi status not confirmed', 'Air conditioning', 'Private bathroom'], cancellation: 'Check supplier policy', checkin: 'Check-in time varies', checkout: 'Check-out time varies', taxes: 'Taxes/fees subject to supplier quote' }
+            ]
+        };
+
+        function getHotelOptions(destination) {
+            const loc = (destination || '').toLowerCase();
+            if (loc.includes('boracay') || loc.includes('mph') || loc.includes('klo')) return demoHotelInventory.boracay;
+            if (loc.includes('bangkok') || loc.includes('bkk') || loc.includes('dmk')) return demoHotelInventory.bangkok;
+            return demoHotelInventory.other;
+        }
+
+        function getQuoteHotel(quote) {
+            const options = getHotelOptions(currentDestination);
+            return options.find(h => h.id === quote.hotelId) || options[0];
+        }
+
+        function selectQuoteHotel(index, hotelId) {
+            const quote = currentQuotes[index];
+            if (!quote) return;
+            const hotel = getHotelOptions(currentDestination).find(h => h.id === hotelId);
+            if (!hotel) return;
+            quote.hotelId = hotel.id;
+            quote.hotelName = hotel.name;
+            quote.hotelDeltaUSD = hotel.priceDeltaUSD;
+            quote.basePriceUSD = Math.max(1, quote.originalBasePriceUSD + hotel.priceDeltaUSD);
+            const pricing = calculateSellingPrice(quote.basePriceUSD);
+            quote.markupUSD = pricing.profit;
+            quote.finalPriceUSD = pricing.sellingPrice;
+            renderCards();
+        }
+        
+        // App State
+        let currentSearchMode = 'snap'; 
+        let isAdminMode = false;
+        let isTripInternational = false;
+        
+        // DOM Elements mapping
+        const tabs = document.querySelectorAll('.category-tab');
+        const formGroups = {
+            origin: document.querySelector('.form-group-origin'),
+            destination: document.querySelector('.form-group-destination'),
+            date: document.querySelector('.form-group-date'),
+            dateReturn: document.querySelector('.form-group-date-return'),
+            guests: document.querySelector('.form-group-guests'),
+            rooms: document.querySelector('.form-group-rooms'),
+            submit: document.querySelector('.form-group-submit')
+        };
+        const labels = {
+            origin: document.getElementById('label-origin'),
+            destination: document.getElementById('label-destination'),
+            checkin: document.getElementById('label-checkin'),
+            checkout: document.getElementById('label-checkout'),
+            guests: document.getElementById('label-guests')
+        };
+        const btnText = document.getElementById('searchBtnText');
+
+        function setupAutocomplete(inputId, dropdownId) {
+            const input = document.getElementById(inputId);
+            const dropdown = document.getElementById(dropdownId);
+
+            input.addEventListener('input', function() {
+                const val = this.value.toLowerCase();
+                dropdown.innerHTML = '';
+                if (!val) {
+                    dropdown.classList.add('hidden');
+                    return;
+                }
+
+                // Filter airports based on user input
+                const matches = airportData.filter(airport => 
+                    airport.city.toLowerCase().includes(val) || 
+                    airport.country.toLowerCase().includes(val) || 
+                    airport.code.toLowerCase().includes(val) ||
+                    airport.name.toLowerCase().includes(val)
+                );
+
+                if (matches.length > 0) {
+                    matches.forEach(match => {
+                        const div = document.createElement('div');
+                        div.className = 'px-4 py-3 hover:bg-primary-50 cursor-pointer border-b border-gray-100 last:border-0 transition-colors text-left';
+                        div.innerHTML = `
+                            <div class="flex items-center justify-between">
+                                <div class="flex flex-col">
+                                    <span class="font-semibold text-gray-800 text-sm">${match.city}, ${match.country}</span>
+                                    <span class="text-xs text-gray-500">${match.name}</span>
+                                </div>
+                                <span class="bg-gray-100 text-gray-700 text-xs font-bold px-2 py-1 rounded">${match.code}</span>
+                            </div>
+                        `;
+                        // Select the autocomplete item
+                        div.addEventListener('click', function(e) {
+                            e.stopPropagation(); // prevent document click listener
+                            input.value = `${match.city} (${match.code})`;
+                            dropdown.classList.add('hidden');
+                        });
+                        dropdown.appendChild(div);
+                    });
+                    dropdown.classList.remove('hidden');
+                } else {
+                    dropdown.innerHTML = '<div class="px-4 py-3 text-sm text-gray-500 text-left">No locations found.</div>';
+                    dropdown.classList.remove('hidden');
+                }
+            });
+
+            // Trigger search suggestions when clicking into the input field
+            input.addEventListener('focus', function() {
+                if (this.value) {
+                    this.dispatchEvent(new Event('input'));
+                }
+            });
+        }
+        
+        // Initialize autocomplete on fields
+        setupAutocomplete('origin', 'origin-dropdown');
+        setupAutocomplete('destination', 'destination-dropdown');
+
+        // Close dropdowns if user clicks outside of them
+        document.addEventListener('click', function(e) {
+            if (!document.getElementById('origin').contains(e.target) && !document.getElementById('origin-dropdown').contains(e.target)) {
+                document.getElementById('origin-dropdown').classList.add('hidden');
+            }
+            if (!document.getElementById('destination').contains(e.target) && !document.getElementById('destination-dropdown').contains(e.target)) {
+                document.getElementById('destination-dropdown').classList.add('hidden');
+            }
+        });
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => {
+                    t.classList.remove('border-primary-500');
+                    t.classList.add('border-transparent');
+                });
+                tab.classList.remove('border-transparent');
+                tab.classList.add('border-primary-500');
+
+                currentSearchMode = tab.dataset.type;
+                updateFormUI();
+            });
+        });
+
+        // Dynamically adjust form based on selected tab
+        function updateFormUI() {
+            Object.values(formGroups).forEach(group => group.style.display = 'block');
+            formGroups.origin.className = 'lg:col-span-2 form-group-origin';
+            formGroups.destination.className = 'lg:col-span-2 form-group-destination';
+            formGroups.submit.className = 'lg:col-span-4 mt-2 form-group-submit';
+            
+            document.getElementById('checkout').required = true;
+            document.getElementById('origin').required = true;
+
+            switch(currentSearchMode) {
+                case 'flights':
+                    formGroups.rooms.style.display = 'none';
+                    labels.origin.textContent = 'Origin';
+                    labels.destination.textContent = 'Destination';
+                    labels.checkin.textContent = 'Departure';
+                    labels.checkout.textContent = 'Return';
+                    labels.guests.textContent = 'Passengers';
+                    btnText.textContent = 'Flights';
+                    formGroups.submit.className = 'lg:col-span-5 mt-2 form-group-submit';
+                    break;
+                case 'snap':
+                    labels.origin.textContent = 'Origin';
+                    labels.destination.textContent = 'Destination';
+                    labels.checkin.textContent = 'Departure';
+                    labels.checkout.textContent = 'Return';
+                    labels.guests.textContent = 'Guests';
+                    btnText.textContent = 'Flight + Hotel';
+                    break;
+                case 'hotels':
+                    formGroups.origin.style.display = 'none';
+                    document.getElementById('origin').required = false;
+                    formGroups.destination.className = 'lg:col-span-4 form-group-destination';
+                    labels.destination.textContent = 'City, Property, or Location';
+                    labels.checkin.textContent = 'Check-in';
+                    labels.checkout.textContent = 'Check-out';
+                    btnText.textContent = 'Hotels';
+                    break;
+                case 'ride':
+                    formGroups.rooms.style.display = 'none';
+                    labels.origin.textContent = 'Pick-up Location';
+                    labels.destination.textContent = 'Drop-off Location';
+                    labels.checkin.textContent = 'Pick-up Date';
+                    labels.checkout.textContent = 'Return Date (Optional)';
+                    document.getElementById('checkout').required = false;
+                    btnText.textContent = 'Airport Ride';
+                    formGroups.submit.className = 'lg:col-span-5 mt-2 form-group-submit';
+                    break;
+            }
+        }
+        
+        updateFormUI(); // init
+
+        // Admin Mode Toggle Logic
+        document.getElementById('adminToggle').addEventListener('click', function() {
+            isAdminMode = !isAdminMode;
+            const icon = document.getElementById('adminIcon');
+            if (isAdminMode) {
+                icon.classList.remove('fa-lock');
+                icon.classList.add('fa-lock-open', 'text-red-500');
+                this.classList.remove('text-gray-300');
+                this.classList.add('text-red-500');
+            } else {
+                icon.classList.remove('fa-lock-open', 'text-red-500');
+                icon.classList.add('fa-lock');
+                this.classList.remove('text-red-500');
+                this.classList.add('text-gray-300');
+            }
+            if (currentQuotes.length > 0) renderCards(); 
+        });
+
+        // Handle Currency Change
+        document.getElementById('currencySelector').addEventListener('change', function(e) {
+            currentCurrency = e.target.value;
+            if (currentQuotes.length > 0) renderCards();
+        });
+
+        function formatCurrency(baseAmountInUSD) {
+            const rate = exchangeRates[currentCurrency] || 1;
+            const convertedAmount = baseAmountInUSD * rate;
+            const locale = currencyLocales[currentCurrency] || 'en-US';
+            const maxFractionDigits = currentCurrency === 'JPY' ? 0 : 2;
+            
+            return new Intl.NumberFormat(locale, { 
+                style: 'currency', 
+                currency: currentCurrency,
+                maximumFractionDigits: maxFractionDigits
+            }).format(convertedAmount);
+        }
+
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const originVal = document.getElementById('origin').value;
+            const destVal = document.getElementById('destination').value;
+            
+            // Extract the country based on the airport code in the input string
+            const getCountry = (str) => { 
+                if (!str) return null;
+                const found = airportData.find(a => str.includes(a.code)); 
+                return found ? found.country : null; 
+            };
+            
+            const oCountry = getCountry(originVal);
+            const dCountry = getCountry(destVal);
+            
+            // Flag as international if countries are successfully identified and differ
+            isTripInternational = (oCountry && dCountry && oCountry !== dCountry);
+
+            const destination = document.getElementById('destination').value;
+            const checkin = document.getElementById('checkin').value;
+            const checkout = document.getElementById('checkout').value;
+            const guests = document.getElementById('guests').value;
+
+            if (checkout && new Date(checkout) <= new Date(checkin)) {
+                alert("Error: Return date must be after departure date.");
+                return;
+            }
+
+            // Show loading UI
+            document.getElementById('resultsSection').classList.remove('hidden');
+            document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('resultsData').classList.add('hidden');
+            document.getElementById('loadingDestination').textContent = destination;
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+
+            // Simulate API delay
+            setTimeout(() => {
+                generateResults(destination, checkin, checkout, guests);
+            }, 2000);
+        });
+
+        function generateResults(destination, checkin, checkout, guests) {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('resultsData').classList.remove('hidden');
+
+            const typeLabels = { 'flights': 'Flights to', 'hotels': 'Stays in', 'snap': 'Trip to', 'ride': 'Ride to' };
+            document.getElementById('resDest').innerHTML = `${typeLabels[currentSearchMode]} <strong class="text-gray-900">${destination}</strong>`;
+            
+            const options = { month: 'short', day: 'numeric', year: 'numeric' };
+            let dateText = new Date(checkin).toLocaleDateString('en-US', options);
+            if (checkout) dateText += ` - ${new Date(checkout).toLocaleDateString('en-US', options)}`;
+            
+            document.getElementById('resDates').textContent = dateText;
+            document.getElementById('resGuests').textContent = guests;
+            currentDestination = destination;
+            currentStayDates = { checkin, checkout };
+
+            // DEMO FALLBACK ONLY: these are synthetic estimates, NOT live supplier API prices.
+            // Production must replace this block with supplier search results for the exact dates,
+            // passenger/room counts, baggage, taxes, cancellation terms, and availability.
+            const seed = destination.length * 15;
+            let basePriceUSD = 250 + seed;
+            if (currentSearchMode === 'flights') basePriceUSD *= 0.5;
+            else if (currentSearchMode === 'hotels') basePriceUSD *= 0.4;
+            else if (currentSearchMode === 'ride') basePriceUSD *= 0.15;
+
+            currentQuotes = packageOptions.map((pkg, index) => {
+                // Clearly labeled sample cost tiers; no random price changes between searches.
+                const multiplier = [0.85, 1.00, 1.12, 1.28, 0.93][index];
+                const netBasePrice = basePriceUSD * multiplier;
+                const pricing = calculateSellingPrice(netBasePrice);
+                return {
+                    ...pkg,
+                    priceSource: 'DEMO ESTIMATE — NOT LIVE',
+                    basePriceUSD: pricing.netCost,
+                    originalBasePriceUSD: pricing.netCost,
+                    markupUSD: pricing.profit,
+                    finalPriceUSD: pricing.sellingPrice,
+                    hotelId: 'default',
+                    hotelName: getHotelOptions(destination)[0].name,
+                    hotelDeltaUSD: 0
+                };
+            });
+
+            currentQuotes.sort((a, b) => a.finalPriceUSD - b.finalPriceUSD);
+            renderCards();
+        }
+
+        function renderCards() {
+            const container = document.getElementById('cardsContainer');
+            container.innerHTML = ''; 
+
+            currentQuotes.forEach((quote, index) => {
+                const isCheapest = index === 0;
+                const formattedPrice = formatCurrency(quote.finalPriceUSD);
+                const hotelOptions = getHotelOptions(currentDestination);
+                const selectedHotel = getQuoteHotel(quote);
+                const hotelPickerHTML = currentSearchMode === 'snap' ? `
+                    <div class="mt-4 mb-5 p-4 bg-teal-50/70 border border-teal-100 rounded-xl">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                            <div class="text-sm font-bold text-gray-800"><i class="fa-solid fa-hotel text-primary-600 mr-2"></i>Choose your hotel</div>
+                            <span class="text-xs font-semibold text-primary-700">${hotelOptions.length} hotel options</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          ${hotelOptions.map((h, hotelIndex) => {
+                            const hotelImages = [
+                              'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80',
+                              'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80',
+                              'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=80',
+                              'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=800&q=80'
+                            ];
+                            const chosen = h.id === selectedHotel.id;
+                            const deltaPricing = calculateSellingPrice(Math.abs(h.priceDeltaUSD));
+                            const deltaLabel = h.priceDeltaUSD === 0 ? 'Included in package' : `${h.priceDeltaUSD > 0 ? '+' : '−'}${formatCurrency(deltaPricing.sellingPrice)}`;
+                            const breakfastLabel = h.breakfast === 'Included' ? 'Breakfast included' : h.breakfast === 'Not included' ? 'Breakfast not included' : 'Breakfast: confirm with supplier';
+                            const amenityList = (h.amenities || []).map(a => `<li class="flex gap-2"><i class="fa-solid fa-check text-teal-600 mt-0.5"></i><span>${a}</span></li>`).join('');
+                            return `<article class="bg-white rounded-xl overflow-hidden border-2 ${chosen ? 'border-teal-700 ring-2 ring-teal-100' : 'border-gray-200'} transition-all shadow-sm">
+                              <div class="relative"><img src="${hotelImages[hotelIndex % hotelImages.length]}" alt="${h.name}" class="w-full h-36 object-cover" loading="lazy"><span class="absolute top-2 left-2 bg-white/95 text-teal-900 text-xs font-bold px-2 py-1 rounded-full"><i class="fa-solid fa-star text-amber-500 mr-1"></i>${h.rating || 'Rating unavailable'}</span>${chosen ? '<span class="absolute top-2 right-2 bg-teal-700 text-white text-xs font-bold px-2 py-1 rounded-full"><i class="fa-solid fa-check mr-1"></i>Selected</span>' : ''}</div>
+                              <div class="p-3"><div class="font-bold text-sm text-gray-900 leading-snug">${h.name}</div><div class="text-xs text-gray-500 mt-1"><i class="fa-solid fa-location-dot mr-1"></i>${h.location || h.note}</div>
+                                <div class="mt-3 rounded-lg bg-amber-50 border border-amber-100 p-2 text-xs text-amber-900"><i class="fa-solid fa-utensils mr-1"></i><strong>${breakfastLabel}</strong></div>
+                                <div class="mt-3 text-xs text-gray-700"><div class="font-bold text-gray-900 mb-1">Room & stay details</div><p><i class="fa-solid fa-bed mr-1 text-teal-700"></i>${h.room || 'Room type subject to supplier confirmation'}</p><p class="mt-1"><i class="fa-solid fa-calendar-check mr-1 text-teal-700"></i>${h.checkin || 'Check-in varies'} · ${h.checkout || 'Check-out varies'}</p><p class="mt-1"><i class="fa-solid fa-ban mr-1 text-teal-700"></i>${h.cancellation || 'Cancellation policy subject to confirmation'}</p><p class="mt-1"><i class="fa-solid fa-receipt mr-1 text-teal-700"></i>${h.taxes || 'Taxes and fees subject to quote'}</p></div>
+                                <div class="mt-3 text-xs text-gray-700"><div class="font-bold text-gray-900 mb-1">Amenities</div><ul class="space-y-1">${amenityList}</ul></div>
+                                <div class="flex items-end justify-between gap-2 mt-4 pt-3 border-t border-gray-100"><span class="text-xs ${h.priceDeltaUSD < 0 ? 'text-green-700' : 'text-gray-500'}">${deltaLabel}</span><button type="button" onclick="selectQuoteHotel(${index}, '${h.id}')" aria-pressed="${chosen}" class="px-3 py-2 rounded-lg text-xs font-bold ${chosen ? 'bg-teal-700 text-white' : 'bg-teal-50 text-teal-800 hover:bg-teal-100'}">${chosen ? 'Selected' : 'Choose this hotel'}</button></div></div>
+                            </article>`;
+                          }).join('')}
+                        </div>
+                        <p class="text-xs text-gray-500 mt-3">Package total updates when a hotel is selected. Target TYP margin: 15% of the selling price.</p>
+                        <p class="text-[11px] text-amber-700 mt-1">PROTOTYPE HOTEL DETAILS: breakfast, room, amenities, cancellation, check-in/out, taxes, and location must be populated from the selected supplier's actual hotel offer. Current hotel entries are examples and are not verified live details.</p>
+                    </div>` : '';
+                
+                const card = document.createElement('div');
+                card.className = `relative bg-white rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl border ${isCheapest ? 'border-primary-500 shadow-lg shadow-primary-500/20 transform hover:-translate-y-1' : 'border-gray-200'}`;
+                
+                let badgeHTML = isCheapest ? `
+                    <div class="absolute top-0 right-0 bg-primary-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg z-10 flex items-center gap-1">
+                        <i class="fa-solid fa-crown"></i> Cheapest
+                    </div>
+                ` : '';
+
+                card.innerHTML = `
+                    ${badgeHTML}
+                    <div class="p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 ${quote.bg} rounded-full flex items-center justify-center ${quote.color} text-xl">
+                                <i class="fa-solid ${quote.icon}"></i>
+                            </div>
+                            <h3 class="font-bold text-gray-900 text-lg">${quote.name}</h3>
+                        </div>
+                        
+                        ${hotelPickerHTML}
+                        <div class="mt-4 mb-6">
+                            <p class="text-sm text-gray-500 mb-1">Total Package Price</p>
+                            <div class="flex items-end gap-2">
+                                <span class="text-3xl font-extrabold ${isCheapest ? 'text-primary-600' : 'text-gray-900'}">
+                                    ${formattedPrice}
+                                </span>
+                            </div>
+                            
+                            ${isAdminMode ? `
+                            <div class="mt-4 p-3 bg-gray-50 rounded-lg text-xs font-mono border border-dashed border-gray-300">
+                                <div class="font-bold text-gray-700 mb-2 border-b border-gray-200 pb-1">ADMIN BREAKDOWN · ${quote.priceSource || 'Supplier quote required'}</div>
+                                <div class="flex justify-between mb-1 text-gray-600">
+                                    <span>Net Base Price:</span> <span>${formatCurrency(quote.basePriceUSD)}</span>
+                                </div>
+                                <div class="flex justify-between mb-1 text-green-600 font-bold">
+                                    <span>TYP Profit (15% selling-price margin):</span> <span>+${formatCurrency(quote.markupUSD)}</span>
+                                </div>
+                                <div class="flex justify-between mt-2 pt-1 border-t border-gray-200 font-bold text-gray-800">
+                                    <span>Selling Price:</span> <span>${formattedPrice}</span>
+                                </div>
+                            </div>
+                            ` : ''}
+                        </div>
+
+                        <!-- Fixed Book Now button -->
+                        <button onclick="openCheckoutModal(${index})" class="w-full py-3 px-4 rounded-lg font-semibold transition-colors ${isCheapest ? 'bg-primary-500 hover:bg-primary-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'}">
+                            Book Now <i class="fa-solid fa-arrow-right ml-1 text-sm"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Modal Logic Fix
+        const modalOverlay = document.getElementById('checkoutModalOverlay');
+        const modalContent = document.getElementById('checkoutModalContent');
+        const checkoutFormContainer = document.getElementById('checkoutFormContainer');
+        const simulatingState = document.getElementById('checkoutSimulatingState');
+        const successState = document.getElementById('checkoutSuccessState');
+        const travelersInput = document.getElementById('modalTravelersCount');
+        const passengersContainer = document.getElementById('passengersContainer');
+        
+        // Modal State Variables
+        let activeQuoteBaseNetUSD = 0;
+        let activeHotelDeltaUSD = 0;
+
+        function renderPassengerFields(count) {
+            passengersContainer.innerHTML = '';
+            for (let i = 1; i <= count; i++) {
+                const isAdult = i === 1 ? '(Lead Passenger)' : '';
+                const passportRequiredAttr = isTripInternational ? 'required' : '';
+                const passportAsterisk = isTripInternational ? '<span class="text-red-500 ml-1">*</span>' : '';
+
+                passengersContainer.innerHTML += `
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-primary-500"></div>
+                        <h5 class="font-bold text-sm text-gray-800 mb-3 ml-2">Passenger ${i} <span class="text-xs font-normal text-gray-500">${isAdult}</span></h5>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 ml-2">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">First Name</label>
+                                <input type="text" required class="w-full px-2 py-1.5 border border-gray-300 rounded-md focus:ring-1 focus:ring-primary-500 outline-none text-sm" placeholder="Given name">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Last Name</label>
+                                <input type="text" required class="w-full px-2 py-1.5 border border-gray-300 rounded-md focus:ring-1 focus:ring-primary-500 outline-none text-sm" placeholder="Surname">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 ml-2">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Date of Birth</label>
+                                <input type="date" required class="w-full px-2 py-1.5 border border-gray-300 rounded-md focus:ring-1 focus:ring-primary-500 outline-none text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1 flex items-center">Passport / ID Number ${passportAsterisk}</label>
+                                <input type="text" ${passportRequiredAttr} class="w-full px-2 py-1.5 border border-gray-300 rounded-md focus:ring-1 focus:ring-primary-500 outline-none text-sm" placeholder="ID Number">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        travelersInput.addEventListener('change', (e) => {
+            let count = parseInt(e.target.value);
+            if (count < 1) count = 1;
+            if (count > 20) count = 20;
+            e.target.value = count;
+            renderPassengerFields(count);
+            recalculateModalTotal(); // update pricing when guest count changes
+        });
+
+        // Event delegation for dynamically generated checkboxes and standard inputs
+        document.getElementById('customizationSection').addEventListener('change', (e) => {
+            if(e.target.classList.contains('pricing-trigger')) {
+                recalculateModalTotal();
+            }
+        });
+
+        function renderAddonsUI() {
+            const transferContainer = document.getElementById('transferContainer');
+            const transferPriceUSD = 15;
+            const baggageSelect = document.getElementById('baggageSelect');
+
+            baggageSelect.innerHTML = `
+                <option value="0">Standard (7kg Carry-on) - Included</option>
+                <option value="25">+ 20kg Checked Baggage (+${formatCurrency(25 * 1.15)})</option>
+                <option value="40">+ 32kg Checked Baggage (+${formatCurrency(40 * 1.15)})</option>
+            `;
+
+            transferContainer.innerHTML = `
+                <label class="flex items-start cursor-pointer p-4 border border-gray-200 rounded-xl w-full hover:bg-gray-50 hover:border-primary-300 transition-all gap-4 relative group shadow-sm">
+                    <input type="checkbox" id="transferCheckbox" class="mt-1 w-5 h-5 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 pricing-trigger" value="${transferPriceUSD}">
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <span class="text-base font-bold text-gray-800 flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-van-shuttle"></i>
+                                </div>
+                                Roundtrip Airport Transfer
+                            </span>
+                            <span class="text-sm font-extrabold text-primary-600 whitespace-nowrap">+${formatCurrency(transferPriceUSD * 1.15)}</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2 leading-relaxed ml-11">Private Air-conditioned Van, Meet & Greet at arrivals, Driver & Tolls included. Hassle-free transport directly to your accommodation.</p>
+                    </div>
+                </label>
+            `;
+        }
+
+        function renderTours(destination) {
+            const container = document.getElementById('toursContainer');
+            const loc = destination.toLowerCase();
+            let availableTours = [];
+
+            if (loc.includes('boracay') || loc.includes('mph') || loc.includes('klo')) {
+                availableTours = [ 
+                    { id: 'tour1', name: 'Boracay Island Hopping & Snorkeling', desc: 'Explore pristine beaches, snorkel in crystal clear waters, and enjoy a local BBQ lunch. Includes boat transfer and guide.', img: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=300&q=80', priceUSD: 18 }, 
+                    { id: 'tour2', name: 'Helmet Diving Experience', desc: 'Walk on the ocean floor and interact with marine life. A safe and unforgettable underwater adventure for non-swimmers.', img: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=300&q=80', priceUSD: 15 },
+                    { id: 'tour3', name: 'Sunset Paraw Sailing', desc: 'Relax on a traditional sailboat as you cruise along the famous White Beach during a breathtaking sunset.', img: 'https://images.unsplash.com/photo-1505993597083-3a4312338661?auto=format&fit=crop&w=300&q=80', priceUSD: 12 }
+                ];
+            } else if (loc.includes('bangkok') || loc.includes('bkk') || loc.includes('dmk')) {
+                availableTours = [ 
+                    { id: 'tour1', name: 'Grand Palace & Emerald Buddha', desc: 'Discover the spectacular Grand Palace and the sacred Emerald Buddha with an expert English-speaking guide.', img: 'https://images.unsplash.com/photo-1582468546235-9bf31e5bc4a1?auto=format&fit=crop&w=300&q=80', priceUSD: 35 }, 
+                    { id: 'tour2', name: 'Damnoen Saduak Floating Market', desc: 'Take a longtail boat through winding canals and experience Thailand’s most famous traditional floating market.', img: 'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?auto=format&fit=crop&w=300&q=80', priceUSD: 25 }
+                ];
+            } else if (loc.includes('tokyo') || loc.includes('nrt') || loc.includes('hnd')) {
+                availableTours = [ 
+                    { id: 'tour1', name: 'Mt. Fuji & Hakone Day Trip', desc: 'Breathtaking views of Mt. Fuji, a cruise on Lake Ashi, and a ride on the Hakone Ropeway. Lunch included.', img: 'https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?auto=format&fit=crop&w=300&q=80', priceUSD: 85 }, 
+                    { id: 'tour2', name: 'Akihabara Go-Kart Experience', desc: 'Dress up as your favorite character and drive a custom go-kart through the neon streets of Akihabara.', img: 'https://images.unsplash.com/photo-1542051812871-34f215d5fdbe?auto=format&fit=crop&w=300&q=80', priceUSD: 60 }
+                ];
+            } else {
+                availableTours = [ 
+                    { id: 'tour1', name: 'Classic City Highlight Tour', desc: 'A comprehensive half-day tour of the city’s top landmarks, historical sites, and vibrant local markets.', img: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=300&q=80', priceUSD: 30 }, 
+                    { id: 'tour2', name: 'Local Food Tasting Experience', desc: 'Immerse yourself in the local culinary scene with guided tastings at the best hidden food stalls.', img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=80', priceUSD: 20 }
+                ];
+            }
+
+            container.innerHTML = availableTours.map(t => `
+                <label class="flex flex-col sm:flex-row items-start sm:items-center cursor-pointer p-4 border border-gray-200 rounded-xl w-full hover:bg-gray-50 hover:border-primary-300 transition-all gap-4 relative overflow-hidden group shadow-sm hover:shadow-md">
+                    <input type="checkbox" class="tour-checkbox pricing-trigger absolute top-4 right-4 sm:static w-5 h-5 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 z-10" value="${t.priceUSD}">
+                    <div class="w-full sm:w-28 h-40 sm:h-24 shrink-0 rounded-lg overflow-hidden border border-gray-200 mt-8 sm:mt-0 relative">
+                        <img src="${t.img}" alt="${t.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="flex-1 pr-12 sm:pr-0 w-full">
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 sm:gap-4 mb-1">
+                            <span class="text-base font-bold text-gray-800 leading-tight">${t.name}</span>
+                            <span class="text-sm font-extrabold text-primary-600 whitespace-nowrap">+${formatCurrency(t.priceUSD * 1.15)}</span>
+                        </div>
+                        <p class="text-xs text-gray-500 leading-relaxed line-clamp-2">${t.desc}</p>
+                    </div>
+                </label>
+            `).join('');
+        }
+
+        function renderFlights() {
+            const container = document.getElementById('flightOptionsContainer');
+            const block = document.getElementById('flightSelectionBlock');
+            
+            // Hide flight selection for Hotels or Ride only
+            if(currentSearchMode === 'hotels' || currentSearchMode === 'ride') {
+                block.classList.add('hidden');
+                return;
+            }
+            
+            block.classList.remove('hidden');
+            
+            const flights = [
+                { id: 'f1', time: '08:00 AM - 11:30 AM', type: 'Direct', priceModUSD: 0, tag: 'Included' },
+                { id: 'f2', time: '10:15 AM - 01:45 PM', type: 'Direct', priceModUSD: 15, tag: 'Prime Time' },
+                { id: 'f3', time: '06:00 PM - 09:30 PM', type: 'Direct', priceModUSD: -5, tag: 'Saver' }
+            ];
+
+            container.innerHTML = flights.map((f, i) => `
+                <label class="flex items-center cursor-pointer p-3 border border-gray-200 rounded-lg w-full hover:bg-gray-50 transition-colors ${i===0 ? 'bg-primary-50 border-primary-200' : ''}">
+                    <input type="radio" name="flightOption" class="flight-radio pricing-trigger w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500" value="${f.priceModUSD}" ${i===0 ? 'checked' : ''}>
+                    <div class="ml-3 flex-1 flex justify-between items-center">
+                        <div>
+                            <p class="text-sm font-bold text-gray-800">${f.time}</p>
+                            <p class="text-xs text-gray-500">${f.type} • ${f.tag}</p>
+                        </div>
+                        <span class="text-xs font-bold ${f.priceModUSD > 0 ? 'text-orange-500' : (f.priceModUSD < 0 ? 'text-green-600' : 'text-gray-500')}">
+                            ${f.priceModUSD > 0 ? '+' : ''}${f.priceModUSD !== 0 ? formatCurrency(f.priceModUSD * 1.15) : 'Included'}
+                        </span>
+                    </div>
+                </label>
+            `).join('');
+
+            // Add highlight logic for radio buttons
+            const radios = container.querySelectorAll('.flight-radio');
+            radios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    radios.forEach(r => r.closest('label').classList.remove('bg-primary-50', 'border-primary-200'));
+                    if(e.target.checked) {
+                        e.target.closest('label').classList.add('bg-primary-50', 'border-primary-200');
+                    }
+                });
+            });
+        }
+
+        function recalculateModalTotal() {
+            const guestCount = parseInt(travelersInput.value) || 1;
+            
+            // 1. Get Base
+            const baseNet = activeQuoteBaseNetUSD;
+            
+            // 2. Get Flight Addon (if visible)
+            let flightNet = 0;
+            const selectedFlight = document.querySelector('input[name="flightOption"]:checked');
+            if (selectedFlight && currentSearchMode !== 'hotels' && currentSearchMode !== 'ride') {
+                flightNet = parseFloat(selectedFlight.value) * guestCount; // flight addon is per person
+            }
+
+            // 3. Get Baggage Addon
+            const baggageVal = parseFloat(document.getElementById('baggageSelect').value) || 0;
+            const baggageNet = baggageVal * guestCount; // baggage is per person
+            
+            // 4. Get Transfer Addon
+            const transferCheckbox = document.getElementById('transferCheckbox');
+            const transferNet = (transferCheckbox && transferCheckbox.checked) ? parseFloat(transferCheckbox.value) * guestCount : 0;
+            
+            // 5. Get Tours Addon
+            let toursNet = 0;
+            document.querySelectorAll('.tour-checkbox:checked').forEach(cb => {
+                toursNet += parseFloat(cb.value) * guestCount; // tours are per person
+            });
+
+            // Summary Math
+            const totalNet = baseNet + flightNet + baggageNet + transferNet + toursNet;
+            const totalMargin = totalNet * 0.15; // TYP always gets 15% of the total built package
+            const finalSellingPrice = totalNet + totalMargin;
+
+            // Update UI Summary rows (Prices displayed to customer include the 15% margin)
+            document.getElementById('sumBasePrice').textContent = formatCurrency(baseNet * 1.15);
+            
+            updateSummaryRow('sumFlightRow', 'sumFlightPrice', flightNet * 1.15);
+            updateSummaryRow('sumBaggageRow', 'sumBaggagePrice', baggageNet * 1.15);
+            updateSummaryRow('sumTransferRow', 'sumTransferPrice', transferNet * 1.15);
+            updateSummaryRow('sumToursRow', 'sumToursPrice', toursNet * 1.15);
+            
+            document.getElementById('modalFinalTotal').textContent = formatCurrency(finalSellingPrice);
+
+            // Update Admin Live Breakdown
+            if (isAdminMode) {
+                document.getElementById('adminModalBreakdown').classList.remove('hidden');
+                document.getElementById('adminNetTotal').textContent = formatCurrency(totalNet);
+                document.getElementById('adminMarginTotal').textContent = '+' + formatCurrency(totalMargin);
+            } else {
+                document.getElementById('adminModalBreakdown').classList.add('hidden');
+            }
+        }
+
+        function updateSummaryRow(rowId, priceId, amount) {
+            const row = document.getElementById(rowId);
+            if (amount !== 0) {
+                row.classList.remove('hidden');
+                document.getElementById(priceId).textContent = amount > 0 ? '+' + formatCurrency(amount) : formatCurrency(amount);
+            } else {
+                row.classList.add('hidden');
+            }
+        }
+
+        function openCheckoutModal(quoteIndex) {
+            const quote = currentQuotes[quoteIndex];
+            activeQuoteBaseNetUSD = quote.basePriceUSD;
+            activeHotelDeltaUSD = quote.hotelDeltaUSD || 0;
+            
+            // Setup data
+            document.getElementById('modalPackageName').textContent = currentSearchMode === 'snap' ? `${quote.name} • ${quote.hotelName || getQuoteHotel(quote).name}` : quote.name;
+            document.getElementById('modalDestTitle').innerHTML = `<i class="fa-solid fa-location-dot text-primary-500 mr-2"></i>${currentDestination}`;
+            document.getElementById('modalDatesText').textContent = document.getElementById('resDates').textContent;
+            
+            // Sync travelers count from main search form to modal
+            const currentGuests = document.getElementById('guests').value || 2;
+            travelersInput.value = currentGuests;
+            
+            // Generate dynamic content
+            renderPassengerFields(parseInt(currentGuests));
+            renderFlights();
+            renderAddonsUI();
+            renderTours(currentDestination);
+            
+            // Reset standard inputs
+            document.getElementById('checkoutForm').reset();
+            
+            // Calculate initial total
+            recalculateModalTotal();
+
+            // Reset views
+            checkoutFormContainer.classList.remove('hidden');
+            simulatingState.classList.add('hidden');
+            successState.classList.add('hidden');
+
+            // Show Modal
+            modalOverlay.classList.remove('hidden');
+            // Small delay to allow display:block to apply before animating opacity
+            setTimeout(() => {
+                modalOverlay.classList.remove('opacity-0');
+                modalOverlay.classList.add('opacity-100');
+                modalContent.classList.add('modal-enter');
+            }, 10);
+        }
+
+        function closeCheckoutModal() {
+            modalOverlay.classList.remove('opacity-100');
+            modalOverlay.classList.add('opacity-0');
+            modalContent.classList.remove('modal-enter');
+            setTimeout(() => {
+                modalOverlay.classList.add('hidden');
+            }, 300); // match transition duration
+        }
+
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // prevent page reload
+            
+            // Hide form, show loading simulator
+            checkoutFormContainer.classList.add('hidden');
+            simulatingState.classList.remove('hidden');
+            simulatingState.classList.add('flex'); // to center content
+            
+            const simText = document.getElementById('simulatingText');
+            simText.textContent = 'Connecting to partner platform...';
+
+            // Simulate automatic API booking process
+            setTimeout(() => {
+                simText.style.opacity = 0;
+                setTimeout(() => {
+                    simText.textContent = 'Securing reservation...';
+                    simText.style.opacity = 1;
+                }, 200);
+
+                setTimeout(() => {
+                    simText.style.opacity = 0;
+                    setTimeout(() => {
+                        simText.textContent = 'Confirming details and generating itinerary...';
+                        simText.style.opacity = 1;
+                    }, 200);
+
+                    setTimeout(() => {
+                        // Finish simulation, show success state
+                        simulatingState.classList.add('hidden');
+                        simulatingState.classList.remove('flex');
+                        
+                        successState.classList.remove('hidden');
+                        successState.classList.add('flex');
+                        
+                        // Set text in success modal to exactly what was requested
+                        const successHeader = successState.querySelector('h3');
+                        if(successHeader) successHeader.textContent = 'Booking Confirmed!';
+
+                    }, 2000);
+                }, 2500);
+            }, 2000);
+        });
+
+        // Set default dates to tomorrow and next week on load
+        window.onload = () => {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const nextWeek = new Date(today);
+            nextWeek.setDate(nextWeek.getDate() + 7);
+
+            document.getElementById('checkin').value = tomorrow.toISOString().split('T')[0];
+            document.getElementById('checkout').value = nextWeek.toISOString().split('T')[0];
+        };
+    </script>
+</body>
+</html>
