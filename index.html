@@ -8,35 +8,38 @@
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Load Google Fonts (Inter) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Load Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Load FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script>
-        // Corporate navy; "teal" is aliased so legacy teal-* classes follow the new palette
+        // Deep navy + gold; "teal" is aliased so legacy teal-* classes follow the palette
         const navy = {
-            50: '#f1f5fb',
-            100: '#dce6f4',
-            200: '#b9cce8',
-            300: '#8aa9d4',
-            400: '#5a82b8',
-            500: '#1e4a8a',
-            600: '#173b70',
-            700: '#12305c',
-            800: '#0d2447',
-            900: '#0a1b36',
+            50: '#f3f5f9',
+            100: '#e2e7f1',
+            200: '#c3cde1',
+            300: '#8f9fc0',
+            400: '#5c6f99',
+            500: '#2a3a63',
+            600: '#1d2b4f',
+            700: '#0f1a38',
+            800: '#0a1229',
+            900: '#070d1f',
         };
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['Manrope', 'sans-serif'],
+                        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
                     },
                     colors: {
                         primary: navy,
-                        teal: navy
+                        teal: navy,
+                        gold: { 300: '#e3c887', 400: '#d4ae60', 500: '#b8893a', 600: '#9c7230' },
+                        ivory: '#faf8f4'
                     }
                 }
             }
@@ -44,7 +47,7 @@
     </script>
     
     <style>
-        /* Custom scrollbar and animations */
+        html { scroll-behavior: smooth; scroll-padding-top: 90px; }
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -52,16 +55,20 @@
             background: #f1f1f1;
         }
         ::-webkit-scrollbar-thumb {
-            background: #1e4a8a;
+            background: #1d2b4f;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #173b70;
+            background: #0f1a38;
         }
-        /* Corporate look: tighter radii on generated cards and controls */
-        .rounded-2xl { border-radius: 0.5rem !important; }
-        .rounded-xl { border-radius: 0.375rem !important; }
-        .category-tab.active, .category-tab[aria-selected="true"] { background-color: #f1f5fb; }
+        .search-label, #searchForm label { font-size: 0.7rem !important; font-weight: 700 !important; letter-spacing: 0.16em; text-transform: uppercase; color: #3d4f7a !important; }
+        #searchForm input { background-color: #f6f7fa; border-color: #e6e9f0; border-radius: 0.875rem; }
+        #searchForm input:focus { border-color: #b8893a; --tw-ring-color: #e3c887; }
+        .category-tab { color: #3d4f7a; }
+        .category-tab.active { color: #070d1f; }
+        .category-tab.active .tab-icon { color: #b8893a; }
+        .dest-tile img { transition: transform 0.7s ease; }
+        .dest-tile:hover img { transform: scale(1.06); }
         .fade-in {
             animation: fadeIn 0.5s ease-in forwards;
         }
@@ -83,38 +90,35 @@
         }
     </style>
 </head>
-<body class="font-sans text-gray-800 bg-gray-50 antialiased flex flex-col min-h-screen">
+<body class="font-sans text-gray-800 bg-ivory antialiased flex flex-col min-h-screen">
 
-    <div class="bg-primary-900 text-primary-100 text-xs hidden md:block">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-9 flex items-center justify-between">
-            <span><i class="fa-solid fa-shield-halved mr-2"></i>Trusted corporate &amp; leisure travel partner</span>
-            <span><i class="fa-solid fa-headset mr-2"></i>Customer support available 24/7</span>
-        </div>
-    </div>
-
-    <nav class="bg-white border-b border-gray-200 sticky top-0 z-40">
+    <nav class="bg-white/95 backdrop-blur border-b border-gray-100 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16 md:h-20">
-                <a href="#" class="flex items-center gap-3">
-                    <img src="Logo Update White Inner Background.jpg" alt="TYP Explore Travel & Tours Logo" class="h-10 md:h-12 w-auto" onerror="this.src='https://placehold.co/100x100/12305c/white?text=TYP'">
-                    <span class="font-bold text-lg md:text-xl tracking-tight text-primary-900 hidden sm:block">
-                        TYP <span class="font-medium text-gray-500">Explore Travel &amp; Tours</span>
+            <div class="flex justify-between items-center h-20">
+                <a href="#top" class="flex items-center gap-3">
+                    <span class="relative h-12 w-12 shrink-0 rounded-full border-2 border-gold-400 bg-white flex items-center justify-center overflow-hidden">
+                        <span class="font-serif font-bold text-primary-900 text-sm">TYP</span>
+                        <img src="Logo Update White Inner Background.jpg" alt="TYP Explore Travel & Tours Logo" class="absolute inset-0 h-full w-full object-cover bg-white" onerror="this.remove()">
+                    </span>
+                    <span class="leading-none hidden sm:block">
+                        <span class="block font-serif font-bold text-2xl text-primary-900">TYP <span class="text-gold-500">Explore</span></span>
+                        <span class="block text-[10px] tracking-[0.3em] text-primary-500 font-semibold mt-1">TRAVEL &amp; TOURS</span>
                     </span>
                 </a>
                 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="#" class="text-gray-700 hover:text-primary-600 text-sm font-semibold transition-colors">Home</a>
-                    <a href="#" class="text-gray-700 hover:text-primary-600 text-sm font-semibold transition-colors">Destinations</a>
-                    <a href="#" class="text-gray-700 hover:text-primary-600 text-sm font-semibold transition-colors">Packages</a>
-                    <button class="bg-primary-700 hover:bg-primary-800 text-white px-5 py-2.5 rounded-md text-sm font-semibold transition-colors">
+                    <a href="#top" class="text-primary-900 hover:text-gold-500 text-sm font-semibold transition-colors">Home</a>
+                    <a href="#destinations" class="text-primary-900 hover:text-gold-500 text-sm font-semibold transition-colors">Destinations</a>
+                    <a href="#why-typ" class="text-primary-900 hover:text-gold-500 text-sm font-semibold transition-colors">Why TYP</a>
+                    <a href="#contact" class="bg-primary-800 hover:bg-primary-900 text-white px-6 py-3 rounded-full text-sm font-semibold transition-colors">
                         Contact Support
-                    </button>
+                    </a>
                 </div>
 
                 <div class="flex items-center gap-3">
                     <!-- Currency Selector -->
-                    <select id="currencySelector" class="bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-md focus:ring-primary-500 focus:border-primary-500 block py-2 px-2.5 cursor-pointer outline-none">
+                    <select id="currencySelector" class="bg-white border border-gray-200 text-primary-900 text-sm font-semibold rounded-full focus:ring-gold-400 focus:border-gold-400 block py-2.5 px-4 cursor-pointer outline-none">
                         <option value="PHP" selected>PHP (₱)</option>
                         <option value="USD">USD ($)</option>
                         <option value="EUR">EUR (€)</option>
@@ -127,62 +131,58 @@
                     </button>
 
                     <!-- Mobile Menu Button -->
-                    <button id="mobileMenuBtn" type="button" aria-label="Toggle menu" aria-expanded="false" class="md:hidden text-gray-700 hover:text-primary-600 focus:outline-none">
+                    <button id="mobileMenuBtn" type="button" aria-label="Toggle menu" aria-expanded="false" class="md:hidden text-primary-900 hover:text-gold-500 focus:outline-none">
                         <i class="fa-solid fa-bars text-2xl"></i>
                     </button>
                 </div>
             </div>
         </div>
-        <div id="mobileMenu" class="hidden md:hidden border-t border-gray-200 bg-white px-4 py-3 space-y-1">
-            <a href="#" class="block py-2 text-sm font-semibold text-gray-700">Home</a>
-            <a href="#" class="block py-2 text-sm font-semibold text-gray-700">Destinations</a>
-            <a href="#" class="block py-2 text-sm font-semibold text-gray-700">Packages</a>
-            <a href="#" class="block py-2 text-sm font-semibold text-primary-700">Contact Support</a>
+        <div id="mobileMenu" class="hidden md:hidden border-t border-gray-100 bg-white px-4 py-3 space-y-1">
+            <a href="#top" class="block py-2 text-sm font-semibold text-primary-900">Home</a>
+            <a href="#destinations" class="block py-2 text-sm font-semibold text-primary-900">Destinations</a>
+            <a href="#why-typ" class="block py-2 text-sm font-semibold text-primary-900">Why TYP</a>
+            <a href="#contact" class="block py-2 text-sm font-semibold text-gold-600">Contact Support</a>
         </div>
     </nav>
 
-    <main class="flex-grow">
+    <main class="flex-grow flex flex-col" id="top">
         <section class="relative bg-primary-900">
             <!-- Background Image -->
             <div class="absolute inset-0 overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1499678329028-101435549a4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="" class="w-full h-full object-cover object-center opacity-25" />
-                <div class="absolute inset-0 bg-gradient-to-b from-primary-900/90 via-primary-900/80 to-primary-800/95"></div>
+                <img src="https://images.unsplash.com/photo-1499678329028-101435549a4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="" class="w-full h-full object-cover object-center" />
+                <div class="absolute inset-0 bg-gradient-to-b from-primary-900/70 via-primary-900/50 to-primary-900/90"></div>
             </div>
 
-            <div class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 text-center">
-                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight">
-                    Business &amp; Leisure Travel, Simplified
+            <div class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-16 md:pt-24 md:pb-24 text-center">
+                <h1 class="font-serif text-5xl md:text-6xl lg:text-7xl font-semibold text-white mb-6 leading-[1.05]">
+                    Journeys crafted<br><em class="text-gold-300 font-medium">for you</em>
                 </h1>
-                <p class="text-base md:text-lg text-primary-100 mb-10 max-w-2xl mx-auto">
-                    Compare rates and book flights, hotels, and complete travel packages with a single trusted partner.
+                <p class="text-base md:text-lg text-gray-200 mb-12 max-w-2xl mx-auto">
+                    Compare prices and book affordable flights, hotels, and complete travel packages, all with the care of a dedicated travel partner.
                 </p>
 
-                <!-- Category Selection Tabs -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-gray-200 rounded-t-lg overflow-hidden border border-gray-200 border-b-0">
-                    <button type="button" class="category-tab group bg-white hover:bg-primary-50 transition-colors border-b-4 border-transparent py-4 flex flex-col items-center justify-center gap-1" data-type="flights">
-                        <div class="text-xl text-primary-600"><i class="fa-solid fa-plane-departure"></i></div>
-                        <span class="font-semibold text-gray-800 text-sm">Flights</span>
+                <!-- Search card -->
+                <div class="bg-white rounded-3xl shadow-2xl text-left overflow-hidden">
+                <div class="flex flex-wrap items-center gap-x-8 gap-y-1 px-6 md:px-10 border-b border-gray-100">
+                    <button type="button" class="category-tab active group flex items-center gap-3 py-5 border-b-2 border-gold-500 -mb-px transition-colors" data-type="snap">
+                        <span class="tab-icon text-lg text-gold-500 flex gap-1"><i class="fa-solid fa-plane"></i><i class="fa-solid fa-bed"></i></span>
+                        <span class="text-left leading-tight"><span class="block font-bold text-sm">SNAP!</span><span class="block text-xs font-medium text-gray-500">Flight + Hotel</span></span>
                     </button>
-                    
-                    <button type="button" class="category-tab active group bg-white hover:bg-primary-50 transition-colors border-b-4 border-primary-500 py-4 flex flex-col items-center justify-center gap-1" data-type="snap">
-                        <div class="text-xl text-primary-600 flex gap-1">
-                            <i class="fa-solid fa-plane"></i><i class="fa-solid fa-bed"></i>
-                        </div>
-                        <span class="font-semibold text-gray-800 text-sm">SNAP! <span class="text-xs font-medium text-gray-500">Flight + Hotel</span></span>
+                    <button type="button" class="category-tab group flex items-center gap-3 py-5 border-b-2 border-transparent -mb-px transition-colors hover:text-primary-900" data-type="flights">
+                        <span class="tab-icon text-lg"><i class="fa-solid fa-plane-departure"></i></span>
+                        <span class="font-bold text-sm">Flights</span>
                     </button>
-
-                    <button type="button" class="category-tab group bg-white hover:bg-primary-50 transition-colors border-b-4 border-transparent py-4 flex flex-col items-center justify-center gap-1" data-type="hotels">
-                        <div class="text-xl text-primary-600"><i class="fa-solid fa-bed"></i></div>
-                        <span class="font-semibold text-gray-800 text-sm">Hotels</span>
+                    <button type="button" class="category-tab group flex items-center gap-3 py-5 border-b-2 border-transparent -mb-px transition-colors hover:text-primary-900" data-type="hotels">
+                        <span class="tab-icon text-lg"><i class="fa-solid fa-hotel"></i></span>
+                        <span class="font-bold text-sm">Hotels</span>
                     </button>
-
-                    <button type="button" class="category-tab group bg-white hover:bg-primary-50 transition-colors border-b-4 border-transparent py-4 flex flex-col items-center justify-center gap-1" data-type="ride">
-                        <div class="text-xl text-primary-600"><i class="fa-solid fa-car-side"></i></div>
-                        <span class="font-semibold text-gray-800 text-sm">Ride <span class="text-xs font-medium text-gray-500">Airport only</span></span>
+                    <button type="button" class="category-tab group flex items-center gap-3 py-5 border-b-2 border-transparent -mb-px transition-colors hover:text-primary-900" data-type="ride">
+                        <span class="tab-icon text-lg"><i class="fa-solid fa-car-side"></i></span>
+                        <span class="text-left leading-tight"><span class="block font-bold text-sm">Ride</span><span class="block text-xs font-medium text-gray-500">Airport transfer</span></span>
                     </button>
                 </div>
 
-                <div class="bg-white p-5 md:p-8 rounded-b-lg shadow-xl text-left border border-gray-200 border-t-0">
+                <div class="p-6 md:p-10">
                     <form id="searchForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 items-end">
                         
                         <!-- Origin Input -->
@@ -250,17 +250,115 @@
 
                         <!-- Submit Button -->
                         <div class="md:col-span-2 lg:col-span-4 mt-2 form-group-submit">
-                            <button type="submit" id="submitBtn" class="w-full bg-primary-700 hover:bg-primary-800 text-white font-semibold py-3 px-4 rounded-md transition-colors h-[50px] flex items-center justify-center gap-2">
+                            <button type="submit" id="submitBtn" class="w-full bg-primary-800 hover:bg-primary-900 text-white font-semibold py-3 px-4 rounded-2xl shadow-lg transition-colors h-[56px] flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                                 Search <span id="searchBtnText">Flight + Hotel</span>
                             </button>
                         </div>
                     </form>
                 </div>
+                </div>
             </div>
         </section>
 
-        <section id="resultsSection" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 hidden">
+        <section id="destinations" class="order-2 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
+                <div>
+                    <p class="text-xs tracking-[0.3em] font-bold text-gold-500 mb-3">POPULAR DESTINATIONS</p>
+                    <h2 class="font-serif text-4xl md:text-5xl font-semibold text-primary-900">Where will you go next?</h2>
+                </div>
+                <p class="text-gray-500 max-w-sm md:text-right">Pick a destination to start planning. We'll set it in the search for you.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-6 md:h-[650px]">
+                <button type="button" data-dest="Tokyo (NRT)" class="dest-tile group relative overflow-hidden rounded-3xl text-left min-h-[260px] md:col-span-2 md:row-span-2 shadow-md">
+                    <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=1200&q=80" alt="Tokyo" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+                    <div class="absolute inset-0 bg-gradient-to-t from-primary-900/90 via-primary-900/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between">
+                        <div><p class="text-[11px] tracking-[0.25em] font-bold text-gold-300">JAPAN</p><h3 class="font-serif text-4xl md:text-5xl font-semibold text-white">Tokyo</h3></div>
+                        <span class="w-11 h-11 rounded-full bg-white/20 backdrop-blur text-white flex items-center justify-center"><i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </button>
+                <button type="button" data-dest="Singapore (SIN)" class="dest-tile group relative overflow-hidden rounded-3xl text-left min-h-[240px] md:col-span-1 shadow-md">
+                    <img src="https://images.unsplash.com/photo-1525625293386-3f8f99389edd?auto=format&fit=crop&w=800&q=80" alt="Singapore" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+                    <div class="absolute inset-0 bg-gradient-to-t from-primary-900/90 via-primary-900/10 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-5 flex items-end justify-between">
+                        <div><p class="text-[11px] tracking-[0.25em] font-bold text-gold-300">SINGAPORE</p><h3 class="font-serif text-3xl font-semibold text-white">Singapore</h3></div>
+                        <span class="w-10 h-10 rounded-full bg-white/20 backdrop-blur text-white flex items-center justify-center"><i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </button>
+                <button type="button" data-dest="Seoul (ICN)" class="dest-tile group relative overflow-hidden rounded-3xl text-left min-h-[240px] md:col-span-1 shadow-md">
+                    <img src="https://images.unsplash.com/photo-1538485399081-7191377e8241?auto=format&fit=crop&w=800&q=80" alt="Seoul" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+                    <div class="absolute inset-0 bg-gradient-to-t from-primary-900/90 via-primary-900/10 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-5 flex items-end justify-between">
+                        <div><p class="text-[11px] tracking-[0.25em] font-bold text-gold-300">SOUTH KOREA</p><h3 class="font-serif text-3xl font-semibold text-white">Seoul</h3></div>
+                        <span class="w-10 h-10 rounded-full bg-white/20 backdrop-blur text-white flex items-center justify-center"><i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </button>
+                <button type="button" data-dest="Bangkok (BKK)" class="dest-tile group relative overflow-hidden rounded-3xl text-left min-h-[240px] md:col-span-1 shadow-md">
+                    <img src="https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=800&q=80" alt="Bangkok" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+                    <div class="absolute inset-0 bg-gradient-to-t from-primary-900/90 via-primary-900/10 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-5 flex items-end justify-between">
+                        <div><p class="text-[11px] tracking-[0.25em] font-bold text-gold-300">THAILAND</p><h3 class="font-serif text-3xl font-semibold text-white">Bangkok</h3></div>
+                        <span class="w-10 h-10 rounded-full bg-white/20 backdrop-blur text-white flex items-center justify-center"><i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </button>
+                <button type="button" data-dest="Dubai (DXB)" class="dest-tile group relative overflow-hidden rounded-3xl text-left min-h-[240px] md:col-span-1 shadow-md">
+                    <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80" alt="Dubai" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+                    <div class="absolute inset-0 bg-gradient-to-t from-primary-900/90 via-primary-900/10 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-5 flex items-end justify-between">
+                        <div><p class="text-[11px] tracking-[0.25em] font-bold text-gold-300">UNITED ARAB EMIRATES</p><h3 class="font-serif text-3xl font-semibold text-white">Dubai</h3></div>
+                        <span class="w-10 h-10 rounded-full bg-white/20 backdrop-blur text-white flex items-center justify-center"><i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </button>
+            </div>
+        </section>
+
+        <section id="why-typ" class="order-2 bg-gray-100/70 border-y border-gray-100 py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <p class="text-xs tracking-[0.3em] font-bold text-gold-500 mb-3">WHY TRAVEL WITH TYP</p>
+                    <h2 class="font-serif text-4xl md:text-5xl font-semibold text-primary-900">Travel planning, done properly</h2>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white rounded-3xl border border-gray-100 p-8">
+                        <div class="w-14 h-14 rounded-full bg-primary-900 text-gold-300 flex items-center justify-center text-lg mb-8"><i class="fa-solid fa-tag"></i></div>
+                        <h3 class="font-serif text-2xl font-semibold text-primary-900 mb-3">Best Price Guarantee</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed">We compare rates across trusted partners so you get a fair price, every time.</p>
+                    </div>
+                    <div class="bg-white rounded-3xl border border-gray-100 p-8">
+                        <div class="w-14 h-14 rounded-full bg-primary-900 text-gold-300 flex items-center justify-center text-lg mb-8"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                        <h3 class="font-serif text-2xl font-semibold text-primary-900 mb-3">Tailor-made Trips</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed">Choose your hotel, flight time, baggage, transfers and tours in one booking.</p>
+                    </div>
+                    <div class="bg-white rounded-3xl border border-gray-100 p-8">
+                        <div class="w-14 h-14 rounded-full bg-primary-900 text-gold-300 flex items-center justify-center text-lg mb-8"><i class="fa-solid fa-headset"></i></div>
+                        <h3 class="font-serif text-2xl font-semibold text-primary-900 mb-3">Real People, Real Support</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed">Our travel team is here before, during and after your journey.</p>
+                    </div>
+                    <div class="bg-white rounded-3xl border border-gray-100 p-8">
+                        <div class="w-14 h-14 rounded-full bg-primary-900 text-gold-300 flex items-center justify-center text-lg mb-8"><i class="fa-solid fa-lock"></i></div>
+                        <h3 class="font-serif text-2xl font-semibold text-primary-900 mb-3">Secure Booking</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed">Your details are handled with care from search to confirmation.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="order-2 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div class="relative overflow-hidden rounded-3xl bg-primary-900 px-8 md:px-14 py-14 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+                <div class="absolute -right-20 -bottom-24 w-80 h-80 rounded-full border border-gold-500/30"></div>
+                <div class="absolute -right-4 -bottom-10 w-52 h-52 rounded-full border border-gold-500/20"></div>
+                <div class="relative">
+                    <p class="text-xs tracking-[0.3em] font-bold text-gold-400 mb-3">READY WHEN YOU ARE</p>
+                    <h2 class="font-serif text-4xl md:text-5xl font-semibold text-white leading-tight">Your next adventure<br>starts with one search.</h2>
+                </div>
+                <a href="#top" class="relative self-start md:self-center inline-flex items-center gap-3 bg-gold-400 hover:bg-gold-300 text-primary-900 font-bold px-8 py-4 rounded-full transition-colors">
+                    Plan my trip <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
+                </a>
+            </div>
+        </section>
+
+        <section id="resultsSection" class="order-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 hidden">
             
             <!-- Loading Spinner State -->
             <div id="loadingState" class="flex flex-col items-center justify-center py-20 hidden fade-in">
@@ -487,35 +585,48 @@
 
     </main>
 
-    <footer class="bg-primary-900 text-white pt-14 pb-8">
+    <footer class="bg-primary-900 text-white pt-20 pb-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-10 mb-14">
                 <div class="md:col-span-2">
-                    <div class="flex items-center gap-3 mb-4">
-                        <span class="font-bold text-xl tracking-tight">
-                            TYP <span class="font-medium text-primary-200">Explore Travel &amp; Tours</span>
+                    <div class="flex items-center gap-3 mb-5">
+                        <span class="h-12 w-12 shrink-0 rounded-full border-2 border-gold-400 bg-white flex items-center justify-center font-serif font-bold text-primary-900 text-sm">TYP</span>
+                        <span class="leading-none">
+                            <span class="block font-serif font-bold text-2xl">TYP <span class="text-gold-400">Explore</span></span>
+                            <span class="block text-[10px] tracking-[0.3em] text-primary-300 font-semibold mt-1">TRAVEL &amp; TOURS</span>
                         </span>
                     </div>
-                    <p class="text-primary-200 text-sm mb-4 max-w-sm">
-                        Your trusted partner for business and leisure travel worldwide.
+                    <p class="text-primary-200 text-sm max-w-sm leading-relaxed">
+                        Your trusted partner for the best travel deals worldwide. Explore more, experience more.
                     </p>
                 </div>
                 <div>
-                    <h4 class="font-semibold mb-4 text-white uppercase text-xs tracking-wider">Company</h4>
-                    <ul class="space-y-2 text-sm text-primary-200">
-                        <li><a href="#" class="hover:text-white transition-colors">About Us</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                    <h4 class="font-bold mb-5 text-gold-400 uppercase text-xs tracking-[0.25em]">Explore</h4>
+                    <ul class="space-y-3 text-sm text-primary-100">
+                        <li><a href="#top" class="hover:text-gold-300 transition-colors">Search trips</a></li>
+                        <li><a href="#destinations" class="hover:text-gold-300 transition-colors">Destinations</a></li>
+                        <li><a href="#why-typ" class="hover:text-gold-300 transition-colors">Why TYP</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-semibold mb-4 text-white uppercase text-xs tracking-wider">Legal</h4>
-                    <ul class="space-y-2 text-sm text-primary-200">
-                        <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                    <h4 class="font-bold mb-5 text-gold-400 uppercase text-xs tracking-[0.25em]">Company</h4>
+                    <ul class="space-y-3 text-sm text-primary-100">
+                        <li><a href="#contact" class="hover:text-gold-300 transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-gold-300 transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-gold-300 transition-colors">Privacy Policy</a></li>
                     </ul>
                 </div>
+                <div>
+                    <h4 class="font-bold mb-5 text-gold-400 uppercase text-xs tracking-[0.25em]">We accept</h4>
+                    <div class="flex flex-wrap gap-2 text-xs font-semibold text-primary-100">
+                        <span class="border border-primary-500 rounded-full px-3 py-1.5">Credit / Debit</span>
+                        <span class="border border-primary-500 rounded-full px-3 py-1.5">PayPal</span>
+                        <span class="border border-primary-500 rounded-full px-3 py-1.5">Bank Transfer</span>
+                        <span class="border border-primary-500 rounded-full px-3 py-1.5">GCash</span>
+                    </div>
+                </div>
             </div>
-            <div class="border-t border-primary-700 pt-8 text-center text-sm text-primary-300">
+            <div class="border-t border-primary-600 pt-8 text-sm text-primary-300">
                 &copy; 2026 TYP Explore Travel & Tours. All rights reserved.
             </div>
         </div>
@@ -734,11 +845,11 @@
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 tabs.forEach(t => {
-                    t.classList.remove('border-primary-500', 'active');
+                    t.classList.remove('border-gold-500', 'active');
                     t.classList.add('border-transparent');
                 });
                 tab.classList.remove('border-transparent');
-                tab.classList.add('border-primary-500', 'active');
+                tab.classList.add('border-gold-500', 'active');
 
                 currentSearchMode = tab.dataset.type;
                 updateFormUI();
@@ -797,6 +908,14 @@
         }
         
         updateFormUI(); // init
+
+        document.querySelectorAll('.dest-tile').forEach(tile => {
+            tile.addEventListener('click', () => {
+                document.getElementById('destination').value = tile.dataset.dest;
+                document.getElementById('top').scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('checkin').focus({ preventScroll: true });
+            });
+        });
 
         document.getElementById('mobileMenuBtn').addEventListener('click', function() {
             const menu = document.getElementById('mobileMenu');
