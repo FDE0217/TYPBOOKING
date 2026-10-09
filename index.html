@@ -15,6 +15,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script>
+        // Corporate navy; "teal" is aliased so legacy teal-* classes follow the new palette
+        const navy = {
+            50: '#f1f5fb',
+            100: '#dce6f4',
+            200: '#b9cce8',
+            300: '#8aa9d4',
+            400: '#5a82b8',
+            500: '#1e4a8a',
+            600: '#173b70',
+            700: '#12305c',
+            800: '#0d2447',
+            900: '#0a1b36',
+        };
         tailwind.config = {
             theme: {
                 extend: {
@@ -22,14 +35,8 @@
                         sans: ['Inter', 'sans-serif'],
                     },
                     colors: {
-                        primary: {
-                            50: '#f0fdfa',
-                            100: '#ccfbf1',
-                            300: '#5eead4',
-                            500: '#14b8a6', // Teal 500
-                            600: '#0d9488',
-                            700: '#0f766e',
-                        }
+                        primary: navy,
+                        teal: navy
                     }
                 }
             }
@@ -45,12 +52,16 @@
             background: #f1f1f1;
         }
         ::-webkit-scrollbar-thumb {
-            background: #14b8a6;
+            background: #1e4a8a;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #0d9488;
+            background: #173b70;
         }
+        /* Corporate look: tighter radii on generated cards and controls */
+        .rounded-2xl { border-radius: 0.5rem !important; }
+        .rounded-xl { border-radius: 0.375rem !important; }
+        .category-tab.active, .category-tab[aria-selected="true"] { background-color: #f1f5fb; }
         .fade-in {
             animation: fadeIn 0.5s ease-in forwards;
         }
@@ -74,29 +85,36 @@
 </head>
 <body class="font-sans text-gray-800 bg-gray-50 antialiased flex flex-col min-h-screen">
 
-    <nav class="bg-white/95 backdrop-blur shadow-sm sticky top-0 z-40 transition-all duration-300">
+    <div class="bg-primary-900 text-primary-100 text-xs hidden md:block">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-9 flex items-center justify-between">
+            <span><i class="fa-solid fa-shield-halved mr-2"></i>Trusted corporate &amp; leisure travel partner</span>
+            <span><i class="fa-solid fa-headset mr-2"></i>Customer support available 24/7</span>
+        </div>
+    </div>
+
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-20">
-                <div class="flex items-center gap-3 cursor-pointer">
-                    <img src="Logo Update White Inner Background.jpg" alt="TYP Explore Travel & Tours Logo" class="h-14 w-auto rounded-full border border-gray-100 shadow-sm" onerror="this.src='https://placehold.co/100x100/14b8a6/white?text=TYP'">
-                    <span class="font-bold text-2xl tracking-tight text-gray-900 hidden sm:block">
-                        TYP<span class="text-primary-500">Explore</span>
+            <div class="flex justify-between items-center h-16 md:h-20">
+                <a href="#" class="flex items-center gap-3">
+                    <img src="Logo Update White Inner Background.jpg" alt="TYP Explore Travel & Tours Logo" class="h-10 md:h-12 w-auto" onerror="this.src='https://placehold.co/100x100/12305c/white?text=TYP'">
+                    <span class="font-bold text-lg md:text-xl tracking-tight text-primary-900 hidden sm:block">
+                        TYP <span class="font-medium text-gray-500">Explore Travel &amp; Tours</span>
                     </span>
-                </div>
+                </a>
                 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="#" class="text-gray-600 hover:text-primary-500 font-medium transition-colors">Home</a>
-                    <a href="#" class="text-gray-600 hover:text-primary-500 font-medium transition-colors">Destinations</a>
-                    <a href="#" class="text-gray-600 hover:text-primary-500 font-medium transition-colors">Packages</a>
-                    <button class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2.5 rounded-full font-medium transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    <a href="#" class="text-gray-700 hover:text-primary-600 text-sm font-semibold transition-colors">Home</a>
+                    <a href="#" class="text-gray-700 hover:text-primary-600 text-sm font-semibold transition-colors">Destinations</a>
+                    <a href="#" class="text-gray-700 hover:text-primary-600 text-sm font-semibold transition-colors">Packages</a>
+                    <button class="bg-primary-700 hover:bg-primary-800 text-white px-5 py-2.5 rounded-md text-sm font-semibold transition-colors">
                         Contact Support
                     </button>
                 </div>
 
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-3">
                     <!-- Currency Selector -->
-                    <select id="currencySelector" class="bg-gray-50 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2.5 cursor-pointer outline-none shadow-sm transition-shadow">
+                    <select id="currencySelector" class="bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-md focus:ring-primary-500 focus:border-primary-500 block py-2 px-2.5 cursor-pointer outline-none">
                         <option value="PHP" selected>PHP (₱)</option>
                         <option value="USD">USD ($)</option>
                         <option value="EUR">EUR (€)</option>
@@ -109,56 +127,62 @@
                     </button>
 
                     <!-- Mobile Menu Button -->
-                    <button class="md:hidden text-gray-600 hover:text-primary-500 focus:outline-none">
+                    <button id="mobileMenuBtn" type="button" aria-label="Toggle menu" aria-expanded="false" class="md:hidden text-gray-700 hover:text-primary-600 focus:outline-none">
                         <i class="fa-solid fa-bars text-2xl"></i>
                     </button>
                 </div>
             </div>
         </div>
+        <div id="mobileMenu" class="hidden md:hidden border-t border-gray-200 bg-white px-4 py-3 space-y-1">
+            <a href="#" class="block py-2 text-sm font-semibold text-gray-700">Home</a>
+            <a href="#" class="block py-2 text-sm font-semibold text-gray-700">Destinations</a>
+            <a href="#" class="block py-2 text-sm font-semibold text-gray-700">Packages</a>
+            <a href="#" class="block py-2 text-sm font-semibold text-primary-700">Contact Support</a>
+        </div>
     </nav>
 
     <main class="flex-grow">
-        <section class="relative bg-gray-900 h-[650px] lg:h-[750px] flex items-center justify-center">
+        <section class="relative bg-primary-900">
             <!-- Background Image -->
             <div class="absolute inset-0 overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1499678329028-101435549a4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Beautiful Travel Destination" class="w-full h-full object-cover object-center opacity-70" />
-                <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent"></div>
+                <img src="https://images.unsplash.com/photo-1499678329028-101435549a4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="" class="w-full h-full object-cover object-center opacity-25" />
+                <div class="absolute inset-0 bg-gradient-to-b from-primary-900/90 via-primary-900/80 to-primary-800/95"></div>
             </div>
 
-            <div class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center mt-[-80px]">
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 drop-shadow-lg">
-                    Find Your Perfect Getaway
+            <div class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight">
+                    Business &amp; Leisure Travel, Simplified
                 </h1>
-                <p class="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto drop-shadow">
-                    Compare global prices and book the most affordable flights, hotels, and comprehensive travel packages.
+                <p class="text-base md:text-lg text-primary-100 mb-10 max-w-2xl mx-auto">
+                    Compare rates and book flights, hotels, and complete travel packages with a single trusted partner.
                 </p>
 
-                <!-- Category Selection Grid -->
-                <div class="flex flex-wrap justify-center gap-3 sm:gap-4 mb-6">
-                    <button type="button" class="category-tab group w-24 h-24 sm:w-28 sm:h-28 bg-white/95 backdrop-blur rounded-2xl shadow-lg hover:shadow-xl transition-all border-2 border-transparent hover:border-primary-300 flex flex-col items-center justify-center gap-2" data-type="flights">
-                        <div class="text-3xl text-green-500 group-hover:-translate-y-1 transition-transform"><i class="fa-solid fa-plane-departure"></i></div>
-                        <span class="font-bold text-gray-800 text-sm">Flights</span>
+                <!-- Category Selection Tabs -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-gray-200 rounded-t-lg overflow-hidden border border-gray-200 border-b-0">
+                    <button type="button" class="category-tab group bg-white hover:bg-primary-50 transition-colors border-b-4 border-transparent py-4 flex flex-col items-center justify-center gap-1" data-type="flights">
+                        <div class="text-xl text-primary-600"><i class="fa-solid fa-plane-departure"></i></div>
+                        <span class="font-semibold text-gray-800 text-sm">Flights</span>
                     </button>
                     
-                    <button type="button" class="category-tab active group w-24 h-24 sm:w-28 sm:h-28 bg-white/95 backdrop-blur rounded-2xl shadow-lg hover:shadow-xl transition-all border-2 border-primary-500 flex flex-col items-center justify-center gap-1" data-type="snap">
-                        <div class="text-3xl text-green-500 flex gap-1 group-hover:-translate-y-1 transition-transform">
+                    <button type="button" class="category-tab active group bg-white hover:bg-primary-50 transition-colors border-b-4 border-primary-500 py-4 flex flex-col items-center justify-center gap-1" data-type="snap">
+                        <div class="text-xl text-primary-600 flex gap-1">
                             <i class="fa-solid fa-plane"></i><i class="fa-solid fa-bed"></i>
                         </div>
-                        <span class="font-bold text-gray-800 text-sm leading-tight mt-1">SNAP!<br><span class="text-xs font-medium text-gray-500">Flight+Hotel</span></span>
+                        <span class="font-semibold text-gray-800 text-sm">SNAP! <span class="text-xs font-medium text-gray-500">Flight + Hotel</span></span>
                     </button>
 
-                    <button type="button" class="category-tab group w-24 h-24 sm:w-28 sm:h-28 bg-white/95 backdrop-blur rounded-2xl shadow-lg hover:shadow-xl transition-all border-2 border-transparent hover:border-primary-300 flex flex-col items-center justify-center gap-2" data-type="hotels">
-                        <div class="text-3xl text-green-500 group-hover:-translate-y-1 transition-transform"><i class="fa-solid fa-bed"></i></div>
-                        <span class="font-bold text-gray-800 text-sm">Hotels</span>
+                    <button type="button" class="category-tab group bg-white hover:bg-primary-50 transition-colors border-b-4 border-transparent py-4 flex flex-col items-center justify-center gap-1" data-type="hotels">
+                        <div class="text-xl text-primary-600"><i class="fa-solid fa-bed"></i></div>
+                        <span class="font-semibold text-gray-800 text-sm">Hotels</span>
                     </button>
 
-                    <button type="button" class="category-tab group w-24 h-24 sm:w-28 sm:h-28 bg-white/95 backdrop-blur rounded-2xl shadow-lg hover:shadow-xl transition-all border-2 border-transparent hover:border-primary-300 flex flex-col items-center justify-center gap-1" data-type="ride">
-                        <div class="text-3xl text-green-500 group-hover:-translate-y-1 transition-transform mt-1"><i class="fa-solid fa-car-side"></i></div>
-                        <span class="font-bold text-gray-800 text-sm leading-tight mt-1">Ride<br><span class="text-xs font-medium text-gray-500">Airport only</span></span>
+                    <button type="button" class="category-tab group bg-white hover:bg-primary-50 transition-colors border-b-4 border-transparent py-4 flex flex-col items-center justify-center gap-1" data-type="ride">
+                        <div class="text-xl text-primary-600"><i class="fa-solid fa-car-side"></i></div>
+                        <span class="font-semibold text-gray-800 text-sm">Ride <span class="text-xs font-medium text-gray-500">Airport only</span></span>
                     </button>
                 </div>
 
-                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-2xl text-left border border-gray-100 transition-all duration-300">
+                <div class="bg-white p-5 md:p-8 rounded-b-lg shadow-xl text-left border border-gray-200 border-t-0">
                     <form id="searchForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 items-end">
                         
                         <!-- Origin Input -->
@@ -225,8 +249,8 @@
                         </div>
 
                         <!-- Submit Button -->
-                        <div class="lg:col-span-4 mt-2 form-group-submit">
-                            <button type="submit" id="submitBtn" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:shadow-xl transition-all h-[50px] flex items-center justify-center gap-2">
+                        <div class="md:col-span-2 lg:col-span-4 mt-2 form-group-submit">
+                            <button type="submit" id="submitBtn" class="w-full bg-primary-700 hover:bg-primary-800 text-white font-semibold py-3 px-4 rounded-md transition-colors h-[50px] flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                                 Search <span id="searchBtnText">Flight + Hotel</span>
                             </button>
@@ -262,7 +286,7 @@
                             <span id="resGuests" class="text-gray-700 font-medium"></span> Guest(s)
                         </p>
                     </div>
-                    <div class="mt-4 md:mt-0 flex items-center text-sm font-medium text-green-700 bg-green-50 px-4 py-2 rounded-lg border border-green-100">
+                    <div class="mt-4 md:mt-0 flex items-center text-sm font-medium text-primary-800 bg-primary-50 px-4 py-2 rounded-md border border-primary-100">
                         <i class="fa-solid fa-tags mr-2"></i> TYP Best Price Guarantee
                     </div>
                 </div>
@@ -432,7 +456,7 @@
                                     </select>
                                 </div>
                                 
-                                <button type="submit" class="w-full py-3.5 bg-primary-500 hover:bg-primary-600 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all flex justify-center items-center gap-2">
+                                <button type="submit" class="w-full py-3.5 bg-primary-700 hover:bg-primary-800 text-white font-semibold rounded-md transition-colors flex justify-center items-center gap-2">
                                     <i class="fa-solid fa-lock"></i> Confirm & Book
                                 </button>
                             </div>
@@ -463,35 +487,35 @@
 
     </main>
 
-    <footer class="bg-gray-900 text-white pt-16 pb-8">
+    <footer class="bg-primary-900 text-white pt-14 pb-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-                <div class="md:col-span-1">
+                <div class="md:col-span-2">
                     <div class="flex items-center gap-3 mb-4">
                         <span class="font-bold text-xl tracking-tight">
-                            TYP<span class="text-primary-500">Explore</span>
+                            TYP <span class="font-medium text-primary-200">Explore Travel &amp; Tours</span>
                         </span>
                     </div>
-                    <p class="text-gray-400 text-sm mb-4">
-                        Your trusted partner for the best travel deals globally.
+                    <p class="text-primary-200 text-sm mb-4 max-w-sm">
+                        Your trusted partner for business and leisure travel worldwide.
                     </p>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4 text-gray-100">Company</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="#" class="hover:text-primary-500 transition-colors">About Us</a></li>
-                        <li><a href="#" class="hover:text-primary-500 transition-colors">Contact</a></li>
+                    <h4 class="font-semibold mb-4 text-white uppercase text-xs tracking-wider">Company</h4>
+                    <ul class="space-y-2 text-sm text-primary-200">
+                        <li><a href="#" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4 text-gray-100">Legal</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="#" class="hover:text-primary-500 transition-colors">Terms of Service</a></li>
-                        <li><a href="#" class="hover:text-primary-500 transition-colors">Privacy Policy</a></li>
+                    <h4 class="font-semibold mb-4 text-white uppercase text-xs tracking-wider">Legal</h4>
+                    <ul class="space-y-2 text-sm text-primary-200">
+                        <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
+            <div class="border-t border-primary-700 pt-8 text-center text-sm text-primary-300">
                 &copy; 2026 TYP Explore Travel & Tours. All rights reserved.
             </div>
         </div>
@@ -500,11 +524,11 @@
     <script>
         // Generic Package Names (Privacy requirement: No source sites shown)
         const packageOptions = [
-            { name: 'Super Saver Package', icon: 'fa-tag', color: 'text-green-600', bg: 'bg-green-50' },
-            { name: 'Standard Deal', icon: 'fa-box', color: 'text-blue-500', bg: 'bg-blue-50' },
-            { name: 'Comfort Choice', icon: 'fa-mug-hot', color: 'text-orange-500', bg: 'bg-orange-50' },
-            { name: 'Premium Getaway', icon: 'fa-gem', color: 'text-purple-600', bg: 'bg-purple-50' },
-            { name: 'Last Minute Value', icon: 'fa-bolt', color: 'text-yellow-500', bg: 'bg-yellow-50' }
+            { name: 'Super Saver Package', icon: 'fa-tag', color: 'text-primary-700', bg: 'bg-primary-50' },
+            { name: 'Standard Deal', icon: 'fa-box', color: 'text-primary-700', bg: 'bg-primary-50' },
+            { name: 'Comfort Choice', icon: 'fa-mug-hot', color: 'text-primary-700', bg: 'bg-primary-50' },
+            { name: 'Premium Getaway', icon: 'fa-gem', color: 'text-primary-700', bg: 'bg-primary-50' },
+            { name: 'Last Minute Value', icon: 'fa-bolt', color: 'text-primary-700', bg: 'bg-primary-50' }
         ];
 
         const airportData = [
@@ -710,11 +734,11 @@
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 tabs.forEach(t => {
-                    t.classList.remove('border-primary-500');
+                    t.classList.remove('border-primary-500', 'active');
                     t.classList.add('border-transparent');
                 });
                 tab.classList.remove('border-transparent');
-                tab.classList.add('border-primary-500');
+                tab.classList.add('border-primary-500', 'active');
 
                 currentSearchMode = tab.dataset.type;
                 updateFormUI();
@@ -726,7 +750,7 @@
             Object.values(formGroups).forEach(group => group.style.display = 'block');
             formGroups.origin.className = 'lg:col-span-2 form-group-origin';
             formGroups.destination.className = 'lg:col-span-2 form-group-destination';
-            formGroups.submit.className = 'lg:col-span-4 mt-2 form-group-submit';
+            formGroups.submit.className = 'md:col-span-2 lg:col-span-4 mt-2 form-group-submit';
             
             document.getElementById('checkout').required = true;
             document.getElementById('origin').required = true;
@@ -740,7 +764,7 @@
                     labels.checkout.textContent = 'Return';
                     labels.guests.textContent = 'Passengers';
                     btnText.textContent = 'Flights';
-                    formGroups.submit.className = 'lg:col-span-5 mt-2 form-group-submit';
+                    formGroups.submit.className = 'md:col-span-2 lg:col-span-5 mt-2 form-group-submit';
                     break;
                 case 'snap':
                     labels.origin.textContent = 'Origin';
@@ -753,7 +777,7 @@
                 case 'hotels':
                     formGroups.origin.style.display = 'none';
                     document.getElementById('origin').required = false;
-                    formGroups.destination.className = 'lg:col-span-4 form-group-destination';
+                    formGroups.destination.className = 'md:col-span-2 lg:col-span-4 form-group-destination';
                     labels.destination.textContent = 'City, Property, or Location';
                     labels.checkin.textContent = 'Check-in';
                     labels.checkout.textContent = 'Check-out';
@@ -765,14 +789,20 @@
                     labels.destination.textContent = 'Drop-off Location';
                     labels.checkin.textContent = 'Pick-up Date';
                     labels.checkout.textContent = 'Return Date (Optional)';
-                    document.getElementById('checkout').required = false;
                     btnText.textContent = 'Airport Ride';
-                    formGroups.submit.className = 'lg:col-span-5 mt-2 form-group-submit';
+                    document.getElementById('checkout').required = false;
+                    formGroups.submit.className = 'md:col-span-2 lg:col-span-5 mt-2 form-group-submit';
                     break;
             }
         }
         
         updateFormUI(); // init
+
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+            this.setAttribute('aria-expanded', String(!menu.classList.contains('hidden')));
+        });
 
         // Admin Mode Toggle Logic
         document.getElementById('adminToggle').addEventListener('click', function() {
@@ -943,11 +973,11 @@
                     </div>` : '';
                 
                 const card = document.createElement('div');
-                card.className = `relative bg-white rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl border ${isCheapest ? 'border-primary-500 shadow-lg shadow-primary-500/20 transform hover:-translate-y-1' : 'border-gray-200'}`;
+                card.className = `relative bg-white rounded-xl overflow-hidden transition-shadow duration-200 hover:shadow-lg border ${isCheapest ? 'border-primary-500 border-2 shadow-md' : 'border-gray-200'}`;
                 
                 let badgeHTML = isCheapest ? `
-                    <div class="absolute top-0 right-0 bg-primary-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg z-10 flex items-center gap-1">
-                        <i class="fa-solid fa-crown"></i> Cheapest
+                    <div class="absolute top-0 right-0 bg-primary-700 text-white text-xs font-semibold px-3 py-1 rounded-bl-md z-10 flex items-center gap-1">
+                        <i class="fa-solid fa-award"></i> Best Value
                     </div>
                 ` : '';
 
@@ -987,7 +1017,7 @@
                         </div>
 
                         <!-- Fixed Book Now button -->
-                        <button onclick="openCheckoutModal(${index})" class="w-full py-3 px-4 rounded-lg font-semibold transition-colors ${isCheapest ? 'bg-primary-500 hover:bg-primary-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'}">
+                        <button onclick="openCheckoutModal(${index})" class="w-full py-3 px-4 rounded-md font-semibold transition-colors ${isCheapest ? 'bg-primary-700 hover:bg-primary-800 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'}">
                             Book Now <i class="fa-solid fa-arrow-right ml-1 text-sm"></i>
                         </button>
                     </div>
