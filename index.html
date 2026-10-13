@@ -393,6 +393,8 @@
                     </div>
                 </div>
 
+                <div id="compareLinks" class="mb-10"></div>
+
                 <div id="cardsContainer" class="grid grid-cols-1 gap-10">
                     <!-- Javascript will populate mock results here -->
                 </div>
@@ -1021,7 +1023,49 @@
             });
         });
 
+        function renderCompareLinks(destination, checkin, checkout, guests) {
+            const box = document.getElementById('compareLinks');
+            const originVal = document.getElementById('origin').value;
+            const rooms = document.getElementById('rooms').value || 1;
+            const code = (s) => { const m = /\(([A-Z]{3})\)/.exec(s || ''); return m ? m[1] : ''; };
+            const o = code(originVal), d = code(destination);
+            const city = encodeURIComponent((destination || '').replace(/\s*\(.*\)/, '').trim());
+            const e = encodeURIComponent;
+            const links = [];
+            const wantFlights = currentSearchMode === 'flights' || currentSearchMode === 'snap';
+            const wantHotels = currentSearchMode === 'hotels' || currentSearchMode === 'snap';
+
+            if (wantFlights && o && d) {
+                const ymd = (s) => s.slice(2).replace(/-/g, '');
+                links.push(['Skyscanner', 'https://www.skyscanner.com.ph/transport/flights/' + o.toLowerCase() + '/' + d.toLowerCase() + '/' + ymd(checkin) + '/' + (checkout ? ymd(checkout) + '/' : '') + '?adultsv2=' + guests]);
+                links.push(['Google Flights', 'https://www.google.com/travel/flights?q=' + e('Flights from ' + o + ' to ' + d + ' on ' + checkin + (checkout ? ' through ' + checkout : ''))]);
+                links.push(['Kayak', 'https://www.kayak.com/flights/' + o + '-' + d + '/' + checkin + (checkout ? '/' + checkout : '') + '/' + guests + 'adults']);
+                links.push(['Trip.com Flights', 'https://www.trip.com/flights/showfarefirst?dcity=' + o.toLowerCase() + '&acity=' + d.toLowerCase() + '&ddate=' + checkin + (checkout ? '&rdate=' + checkout + '&triptype=rt' : '&triptype=ow') + '&adult=' + guests]);
+                links.push(['Cebu Pacific', 'https://www.cebupacificair.com/']);
+                links.push(['AirAsia Move', 'https://www.airasia.com/flights/']);
+            }
+            if (wantHotels && checkout) {
+                links.push(['Booking.com', 'https://www.booking.com/searchresults.html?ss=' + city + '&checkin=' + checkin + '&checkout=' + checkout + '&group_adults=' + guests + '&no_rooms=' + rooms]);
+                links.push(['Agoda', 'https://www.agoda.com/search?textToSearch=' + city + '&checkIn=' + checkin + '&checkOut=' + checkout + '&rooms=' + rooms + '&adults=' + guests]);
+                links.push(['Trip.com Hotels', 'https://www.trip.com/hotels/list?cityName=' + city + '&checkin=' + checkin.replace(/-/g, '/') + '&checkout=' + checkout.replace(/-/g, '/') + '&adult=' + guests]);
+                links.push(['Airbnb', 'https://www.airbnb.com/s/' + city + '/homes?checkin=' + checkin + '&checkout=' + checkout + '&adults=' + guests]);
+            }
+            if (currentSearchMode !== 'ride' && city) {
+                links.push(['Klook', 'https://www.klook.com/search/result/?query=' + city]);
+            }
+
+            if (!links.length) { box.innerHTML = ''; return; }
+            box.innerHTML =
+                '<div class="bg-white border border-gray-200 rounded-2xl p-6">' +
+                '<div class="font-bold text-gray-900 mb-1"><i class="fa-solid fa-scale-balanced text-gold-500 mr-2"></i>Compare live prices on other platforms</div>' +
+                '<p class="text-sm text-gray-500 mb-4">Opens the same search on each site. Prices shown above are TYP estimates unless marked live.</p>' +
+                '<div class="flex flex-wrap gap-3">' +
+                links.map(([name, url]) => '<a href="' + url + '" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-full border border-gray-300 text-sm font-semibold text-gray-800 hover:border-gold-500 hover:text-gold-600 transition">' + name + ' <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a>').join('') +
+                '</div></div>';
+        }
+
         function generateResults(destination, checkin, checkout, guests, live) {
+            renderCompareLinks(destination, checkin, checkout, guests);
             document.getElementById('loadingState').classList.add('hidden');
             document.getElementById('resultsData').classList.remove('hidden');
 
