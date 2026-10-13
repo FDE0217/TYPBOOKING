@@ -1141,8 +1141,12 @@
                 const hotelPickerHTML = currentSearchMode === 'snap' ? `
                     <div class="mt-4 mb-5 p-4 bg-teal-50/70 border border-teal-100 rounded-xl">
                         <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-                            <div class="text-sm font-bold text-gray-800"><i class="fa-solid fa-hotel text-primary-600 mr-2"></i>Choose your hotel</div>
+                            <div class="text-sm font-bold text-gray-800"><i class="fa-solid fa-hotel text-primary-600 mr-2"></i>Choose your hotel <span class="ml-2 px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold uppercase tracking-wide">Sample hotels</span></div>
                             <span class="text-xs font-semibold text-primary-700">${hotelOptions.length} hotel options</span>
+                        </div>
+                        <div class="mb-4 flex items-start gap-2 text-xs text-amber-900 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                            <i class="fa-solid fa-circle-info mt-0.5"></i>
+                            <span><strong>Example hotels only.</strong> Names, photos, breakfast, room details and hotel prices are not live. Our team confirms the real hotel, breakfast and total price with the supplier before you pay.</span>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                           ${hotelOptions.map((h, hotelIndex) => {
