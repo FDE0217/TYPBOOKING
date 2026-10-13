@@ -1101,7 +1101,10 @@
 
             // Live Amadeus fare becomes the cheapest tier; other tiers scale up from it.
             const isLive = !!(live && live.totalUSD > 0);
-            if (isLive) basePriceUSD = live.totalUSD / 0.85;
+            if (isLive) {
+                const hotelPart = currentSearchMode === 'snap' ? basePriceUSD * 0.4 : 0;
+                basePriceUSD = (live.totalUSD + hotelPart) / 0.85;
+            }
 
             currentQuotes = packageOptions.map((pkg, index) => {
                 const multiplier = [0.85, 1.00, 1.12, 1.28, 0.93][index];
@@ -1110,7 +1113,7 @@
                 return {
                     ...pkg,
                     priceSource: isLive
-                        ? `LIVE ${live.source} (${live.environment})`
+                        ? `LIVE flight: ${live.source} (${live.environment})` + (currentSearchMode === 'snap' ? ' + DEMO hotel' : '')
                         : 'DEMO ESTIMATE — NOT LIVE',
                     basePriceUSD: pricing.netCost,
                     originalBasePriceUSD: pricing.netCost,
