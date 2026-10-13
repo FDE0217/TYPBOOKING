@@ -158,6 +158,18 @@
         </div>
     </nav>
 
+    <form name="booking-request" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
+        <input name="form-name" value="booking-request">
+        <input name="bot-field">
+        <input name="reference">
+        <input name="email">
+        <input name="phone">
+        <input name="destination">
+        <input name="total">
+        <textarea name="summary"></textarea>
+        <textarea name="details_json"></textarea>
+    </form>
+
     <main class="flex-grow flex flex-col" id="top">
         <section class="relative bg-primary-900">
             <!-- Background Image -->
@@ -493,11 +505,11 @@
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                             <label class="block text-xs font-medium text-gray-700 mb-1">Email Address</label>
-                                            <input type="email" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-primary-500 outline-none text-sm" placeholder="john@example.com">
+                                            <input type="email" id="contactEmail" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-primary-500 outline-none text-sm" placeholder="john@example.com">
                                         </div>
                                         <div>
                                             <label class="block text-xs font-medium text-gray-700 mb-1">Phone Number</label>
-                                            <input type="tel" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-primary-500 outline-none text-sm" placeholder="+63 900 000 0000">
+                                            <input type="tel" id="contactPhone" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-primary-500 outline-none text-sm" placeholder="+63 900 000 0000">
                                         </div>
                                     </div>
                                 </div>
@@ -561,16 +573,17 @@
 
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Payment Preference</label>
-                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none text-sm mb-4">
+                                    <select id="paymentPref" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none text-sm mb-2">
                                         <option>Credit/Debit Card</option>
                                         <option>PayPal</option>
                                         <option>Bank Transfer</option>
                                         <option>Gcash / E-Wallet</option>
                                     </select>
+                                    <p class="text-xs text-gray-500 mb-4">No payment is taken now. We send a secure payment link after we confirm your trip.</p>
                                 </div>
                                 
                                 <button type="submit" class="w-full py-3.5 bg-primary-700 hover:bg-primary-800 text-white font-semibold rounded-md transition-colors flex justify-center items-center gap-2">
-                                    <i class="fa-solid fa-lock"></i> Confirm & Book
+                                    <i class="fa-solid fa-paper-plane"></i> Send Booking Request
                                 </button>
                             </div>
                         </div>
@@ -580,8 +593,8 @@
                 <!-- Simulating API Booking State (Hidden initially) -->
                 <div id="checkoutSimulatingState" class="p-12 text-center hidden flex-col items-center justify-center flex-1">
                     <div class="w-20 h-20 border-4 border-gray-100 border-t-primary-500 rounded-full animate-spin mx-auto mb-6"></div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-2 transition-all duration-300" id="simulatingText">Connecting to partner platforms...</h3>
-                    <p class="text-gray-500 mt-2">Securing your selected flights and tours. Please do not refresh.</p>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2 transition-all duration-300" id="simulatingText">Sending your request...</h3>
+                    <p class="text-gray-500 mt-2">Please do not refresh.</p>
                 </div>
 
                 <!-- Success State (Hidden initially) -->
@@ -589,11 +602,19 @@
                     <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 fade-in">
                         <i class="fa-solid fa-check text-5xl text-green-500"></i>
                     </div>
-                    <h3 class="text-3xl font-bold text-gray-900 mb-3">Booking Confirmed!</h3>
-                    <p class="text-gray-600 mb-8 max-w-md mx-auto text-lg">Your customized travel itinerary has been secured. Our team will send the final documents to your email shortly.</p>
-                    <button onclick="closeCheckoutModal()" class="px-8 py-3 bg-gray-900 hover:bg-gray-800 text-white font-bold rounded-lg transition-colors shadow-lg">
-                        Return to Dashboard
-                    </button>
+                    <h3 class="text-3xl font-bold text-gray-900 mb-3">Request Received!</h3>
+                    <p class="text-sm uppercase tracking-widest text-gray-500">Reference number</p>
+                    <p id="bookingRefText" class="text-3xl font-extrabold text-primary-700 mb-4 select-all">TYP-000000-0000</p>
+                    <p class="text-gray-600 mb-6 max-w-lg mx-auto">We have your booking request. Our team will confirm availability and the final price with our suppliers, then email your itinerary and payment instructions to <strong id="bookingEmailText"></strong> within 24 hours. Nothing is charged yet.</p>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button type="button" onclick="printItinerary()" class="px-6 py-3 bg-primary-700 hover:bg-primary-800 text-white font-bold rounded-lg transition-colors shadow-lg">
+                            <i class="fa-solid fa-print mr-2"></i>Print / Save request summary
+                        </button>
+                        <button type="button" onclick="closeCheckoutModal()" class="px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-bold rounded-lg transition-colors shadow-lg">
+                            Close
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-6">Please keep your reference number. Quote it when contacting us.</p>
                 </div>
             </div>
         </div>
@@ -1241,6 +1262,9 @@
         // Modal State Variables
         let activeQuoteBaseNetUSD = 0;
         let activeHotelDeltaUSD = 0;
+        let lastTotalUSD = 0;
+        let activeQuote = null;
+        let lastBooking = null;
 
         function renderPassengerFields(count) {
             passengersContainer.innerHTML = '';
@@ -1455,6 +1479,7 @@
             updateSummaryRow('sumToursRow', 'sumToursPrice', toursNet * 1.15);
             
             document.getElementById('modalFinalTotal').textContent = formatCurrency(finalSellingPrice);
+            lastTotalUSD = finalSellingPrice;
 
             // Update Admin Live Breakdown
             if (isAdminMode) {
@@ -1478,6 +1503,7 @@
 
         function openCheckoutModal(quoteIndex) {
             const quote = currentQuotes[quoteIndex];
+            activeQuote = quote;
             activeQuoteBaseNetUSD = quote.basePriceUSD;
             activeHotelDeltaUSD = quote.hotelDeltaUSD || 0;
             
@@ -1527,47 +1553,131 @@
         }
 
         document.getElementById('checkoutForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // prevent page reload
-            
-            // Hide form, show loading simulator
+            e.preventDefault();
+            submitBookingRequest();
+        });
+
+        function esc(s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+
+        function collectBooking() {
+            const guests = parseInt(travelersInput.value) || 1;
+            const flightInput = document.querySelector('input[name="flightOption"]:checked');
+            const flightLabel = flightInput && currentSearchMode !== 'hotels' && currentSearchMode !== 'ride'
+                ? flightInput.closest('label').querySelector('p').textContent.trim() : null;
+            const baggage = document.getElementById('baggageSelect');
+            const transfer = document.getElementById('transferCheckbox');
+            const tours = [...document.querySelectorAll('.tour-checkbox:checked')]
+                .map(cb => cb.closest('label').querySelector('span').textContent.trim());
+            const passengers = [...passengersContainer.children].map(card => {
+                const f = card.querySelectorAll('input');
+                return { firstName: f[0].value.trim(), lastName: f[1].value.trim(), dob: f[2].value, idNumber: f[3].value.trim() };
+            });
+            const d = new Date();
+            const pad = n => String(n).padStart(2, '0');
+            const reference = 'TYP-' + String(d.getFullYear()).slice(2) + pad(d.getMonth() + 1) + pad(d.getDate()) + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
+            return {
+                reference,
+                submittedAt: d.toISOString(),
+                mode: currentSearchMode,
+                destination: currentDestination,
+                dates: document.getElementById('resDates').textContent,
+                package: document.getElementById('modalPackageName').textContent,
+                hotelIsSample: currentSearchMode === 'snap',
+                priceSource: activeQuote && activeQuote.priceSource || '',
+                travelers: guests,
+                flight: flightLabel,
+                baggage: baggage.options[baggage.selectedIndex].text,
+                transfer: !!(transfer && transfer.checked),
+                tours,
+                paymentPreference: document.getElementById('paymentPref').value,
+                totalUSD: Math.round(lastTotalUSD * 100) / 100,
+                totalDisplay: document.getElementById('modalFinalTotal').textContent,
+                contact: { email: document.getElementById('contactEmail').value.trim(), phone: document.getElementById('contactPhone').value.trim() },
+                passengers
+            };
+        }
+
+        function bookingSummaryText(b) {
+            return [
+                `Reference: ${b.reference}`,
+                `Destination: ${b.destination} (${b.dates})`,
+                `Package: ${b.package}${b.hotelIsSample ? ' [sample hotel - staff to confirm]' : ''}`,
+                `Travelers: ${b.travelers}`,
+                b.flight ? `Flight time: ${b.flight}` : null,
+                `Baggage: ${b.baggage}`,
+                `Airport transfer: ${b.transfer ? 'Yes' : 'No'}`,
+                `Tours: ${b.tours.length ? b.tours.join('; ') : 'None'}`,
+                `Estimated total: ${b.totalDisplay} (USD ${b.totalUSD})`,
+                `Price basis: ${b.priceSource}`,
+                `Payment preference: ${b.paymentPreference}`,
+                `Contact: ${b.contact.email} / ${b.contact.phone}`,
+                '',
+                ...b.passengers.map((p, i) => `Passenger ${i + 1}: ${p.firstName} ${p.lastName}, DOB ${p.dob}, ID ${p.idNumber || '-'}`)
+            ].filter(l => l !== null).join('\n');
+        }
+
+        async function submitBookingRequest() {
+            const booking = collectBooking();
             checkoutFormContainer.classList.add('hidden');
             simulatingState.classList.remove('hidden');
-            simulatingState.classList.add('flex'); // to center content
-            
-            const simText = document.getElementById('simulatingText');
-            simText.textContent = 'Connecting to partner platform...';
+            simulatingState.classList.add('flex');
+            document.getElementById('simulatingText').textContent = 'Sending your request...';
 
-            // Simulate automatic API booking process
-            setTimeout(() => {
-                simText.style.opacity = 0;
-                setTimeout(() => {
-                    simText.textContent = 'Securing reservation...';
-                    simText.style.opacity = 1;
-                }, 200);
+            const body = new URLSearchParams({
+                'form-name': 'booking-request',
+                reference: booking.reference,
+                email: booking.contact.email,
+                phone: booking.contact.phone,
+                destination: booking.destination,
+                total: booking.totalDisplay,
+                summary: bookingSummaryText(booking),
+                details_json: JSON.stringify(booking)
+            });
 
-                setTimeout(() => {
-                    simText.style.opacity = 0;
-                    setTimeout(() => {
-                        simText.textContent = 'Confirming details and generating itinerary...';
-                        simText.style.opacity = 1;
-                    }, 200);
+            try {
+                const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString() });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+            } catch (err) {
+                simulatingState.classList.add('hidden');
+                simulatingState.classList.remove('flex');
+                checkoutFormContainer.classList.remove('hidden');
+                alert('Sorry, we could not send your request. Please check your connection and try again, or contact us directly.');
+                return;
+            }
 
-                    setTimeout(() => {
-                        // Finish simulation, show success state
-                        simulatingState.classList.add('hidden');
-                        simulatingState.classList.remove('flex');
-                        
-                        successState.classList.remove('hidden');
-                        successState.classList.add('flex');
-                        
-                        // Set text in success modal to exactly what was requested
-                        const successHeader = successState.querySelector('h3');
-                        if(successHeader) successHeader.textContent = 'Booking Confirmed!';
+            lastBooking = booking;
+            document.getElementById('bookingRefText').textContent = booking.reference;
+            document.getElementById('bookingEmailText').textContent = booking.contact.email;
+            simulatingState.classList.add('hidden');
+            simulatingState.classList.remove('flex');
+            successState.classList.remove('hidden');
+            successState.classList.add('flex');
+        }
 
-                    }, 2000);
-                }, 2500);
-            }, 2000);
-        });
+        function printItinerary() {
+            const b = lastBooking;
+            if (!b) return;
+            const rows = [
+                ['Reference', b.reference], ['Destination', b.destination], ['Dates', b.dates], ['Package', b.package],
+                ['Travelers', b.travelers], ['Flight time', b.flight || '-'], ['Baggage', b.baggage],
+                ['Airport transfer', b.transfer ? 'Yes' : 'No'], ['Tours', b.tours.length ? b.tours.join(', ') : 'None'],
+                ['Estimated total', b.totalDisplay], ['Contact', b.contact.email + ' / ' + b.contact.phone]
+            ].map(r => `<tr><th>${esc(r[0])}</th><td>${esc(r[1])}</td></tr>`).join('');
+            const pax = b.passengers.map((p, i) => `<li>${esc(p.firstName)} ${esc(p.lastName)}</li>`).join('');
+            const w = window.open('', '_blank');
+            if (!w) { alert('Please allow pop-ups to print your summary.'); return; }
+            w.document.write(`<!doctype html><title>${esc(b.reference)} - TYP Explore Travel & Tours</title>
+<style>body{font-family:Arial,sans-serif;max-width:720px;margin:32px auto;color:#111}h1{color:#0b1f3a;margin-bottom:0}
+table{width:100%;border-collapse:collapse;margin:16px 0}th,td{border:1px solid #ccc;padding:8px;text-align:left;vertical-align:top}th{width:35%;background:#f4f4f4}
+.note{background:#fff7e0;border:1px solid #e0c060;padding:10px;font-size:13px}</style>
+<h1>TYP Explore Travel & Tours</h1><p>Booking request summary</p>
+<table>${rows}</table><h3>Travelers</h3><ul>${pax}</ul>
+<p class="note">This is a request, not a confirmed booking. Prices, availability and hotel details are confirmed by our team before payment. Final itinerary and payment instructions will be emailed to you.</p>
+<script>window.onload=function(){window.print()}<\/script>`);
+            w.document.close();
+        }
 
         // Set default dates to tomorrow and next week on load
         window.onload = () => {

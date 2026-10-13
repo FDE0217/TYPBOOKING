@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>TYP Staff – Payment Link</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+<div class="bg-white rounded-xl shadow p-6 w-full max-w-md">
+  <h1 class="text-xl font-bold mb-1">Create payment link</h1>
+  <p class="text-sm text-gray-500 mb-4">Staff only. Use after you have confirmed the trip with suppliers.</p>
+  <form id="f" class="space-y-3">
+    <input id="ref" placeholder="Booking reference (TYP-...)" class="w-full border rounded px-3 py-2 text-sm">
+    <input id="amt" type="number" min="100" step="0.01" required placeholder="Amount in PHP" class="w-full border rounded px-3 py-2 text-sm">
+    <input id="key" type="password" required placeholder="Staff key" class="w-full border rounded px-3 py-2 text-sm">
+    <button class="w-full bg-blue-900 text-white font-semibold rounded py-2">Create link</button>
+  </form>
+  <div id="out" class="mt-4 text-sm break-all"></div>
+</div>
+<script>
+document.getElementById('f').addEventListener('submit', async e => {
+  e.preventDefault();
+  const out = document.getElementById('out');
+  out.textContent = 'Creating...';
+  try {
+    const r = await fetch('/.netlify/functions/create-payment-link', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-staff-key': document.getElementById('key').value },
+      body: JSON.stringify({ reference: document.getElementById('ref').value, amountPHP: document.getElementById('amt').value })
+    });
+    const d = await r.json();
+    out.innerHTML = '';
+    if (!r.ok) { out.textContent = d.error || 'Failed'; return; }
+    const a = document.createElement('a');
+    a.href = d.url; a.textContent = d.url; a.target = '_blank'; a.className = 'text-blue-700 underline';
+    out.append('Send this to the customer: ', a);
+  } catch (err) { out.textContent = 'Request failed.'; }
+});
+</script>
+</body>
+</html>
