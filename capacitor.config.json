@@ -1,0 +1,10 @@
+{
+  "appId": "com.typexplore.travel",
+  "appName": "TYP Travel",
+  "webDir": "www",
+  "server": {
+    "url": "https://typbooking.netlify.app",
+    "cleartext": false
+  },
+  "backgroundColor": "#0b1f3a"
+}
