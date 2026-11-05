@@ -740,6 +740,7 @@
         let currentCurrency = 'PHP';
         let currentQuotes = [];
         let currentDestination = '';
+        let lastSearch = {};
         let currentStayDates = { checkin: '', checkout: '' };
 
         // Demo hotel choices for the prototype only. Replace with platform/API-verified promo inventory before production.
@@ -1116,6 +1117,7 @@
             document.getElementById('resDates').textContent = dateText;
             document.getElementById('resGuests').textContent = guests;
             currentDestination = destination;
+            lastSearch = { checkin, checkout, guests };
             currentStayDates = { checkin, checkout };
 
             // DEMO FALLBACK ONLY: these are synthetic estimates, NOT live supplier API prices.
@@ -1176,6 +1178,12 @@
                             <i class="fa-solid fa-circle-info mt-0.5"></i>
                             <span><strong>Example hotels only.</strong> Names, photos, breakfast, room details and hotel prices are not live. Our team confirms the real hotel, breakfast and total price with the supplier before you pay.</span>
                         </div>
+                                                    <div class="mb-4 flex flex-wrap items-center gap-2 text-xs">
+                                                        <span class="font-bold text-gray-700">See real hotel prices for your dates:</span>
+                                                        ${[['Booking.com', 'https://www.booking.com/searchresults.html?ss=' + encodeURIComponent((currentDestination || '').replace(/\s*\(.*\)/, '').trim()) + '&checkin=' + (lastSearch.checkin || '') + '&checkout=' + (lastSearch.checkout || '') + '&group_adults=' + (lastSearch.guests || 1)],
+                                                           ['Agoda', 'https://www.agoda.com/search?textToSearch=' + encodeURIComponent((currentDestination || '').replace(/\s*\(.*\)/, '').trim()) + '&checkIn=' + (lastSearch.checkin || '') + '&checkOut=' + (lastSearch.checkout || '') + '&adults=' + (lastSearch.guests || 1)]]
+                                                          .map(([n, u]) => '<a href="' + u + '" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-full bg-primary-600 text-white font-semibold hover:bg-primary-700">' + n + ' <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i></a>').join('')}
+                                                    </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                           ${hotelOptions.map((h, hotelIndex) => {
                             const hotelImages = [
