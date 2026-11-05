@@ -1,0 +1,16 @@
+
+android {
+    signingConfigs {
+        upload {
+            storeFile file('upload.jks')
+            storePassword System.getenv('KS_PASS')
+            keyAlias System.getenv('KEY_ALIAS')
+            keyPassword System.getenv('KS_PASS')
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.upload
+        }
+    }
+}

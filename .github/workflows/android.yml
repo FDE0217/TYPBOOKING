@@ -27,15 +27,23 @@ jobs:
       - run: npx cap add android
       - run: npx capacitor-assets generate --android
       - run: npx cap sync android
-      - name: Build debug APK
+      - name: Set version and signing
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          echo "$KS_B64" | base64 -d > android/app/upload.jks
+          sed -i "s/versionCode 1/versionCode ${{ github.run_number }}/" android/app/build.gradle
+          sed -i "s/versionName \"1.0\"/versionName \"1.0.${{ github.run_number }}\"/" android/app/build.gradle
+          cat android-signing.gradle >> android/app/build.gradle
+      - name: Build signed release bundle and APK
         working-directory: android
-        run: ./gradlew assembleDebug
-      - name: Build release bundle (unsigned)
-        working-directory: android
-        run: ./gradlew bundleRelease
+        env:
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: ./gradlew bundleRelease assembleRelease
       - uses: actions/upload-artifact@v4
         with:
           name: typ-android
           path: |
-            android/app/build/outputs/apk/debug/*.apk
+            android/app/build/outputs/apk/release/*.apk
             android/app/build/outputs/bundle/release/*.aab
