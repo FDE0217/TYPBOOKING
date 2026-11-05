@@ -1075,6 +1075,8 @@
 
             if (wantFlights && o && d) {
                 const ymd = (s) => s.slice(2).replace(/-/g, '');
+                const dm = (s) => s.slice(8, 10) + s.slice(5, 7);
+                links.push(['Aviasales', 'https://www.aviasales.com/search/' + o + dm(checkin) + d + (checkout ? dm(checkout) : '') + guests + '?marker=584883']);
                 links.push(['Skyscanner', 'https://www.skyscanner.com.ph/transport/flights/' + o.toLowerCase() + '/' + d.toLowerCase() + '/' + ymd(checkin) + '/' + (checkout ? ymd(checkout) + '/' : '') + '?adultsv2=' + guests]);
                 links.push(['Google Flights', 'https://www.google.com/travel/flights?q=' + e('Flights from ' + o + ' to ' + d + ' on ' + checkin + (checkout ? ' through ' + checkout : ''))]);
                 links.push(['Kayak', 'https://www.kayak.com/flights/' + o + '-' + d + '/' + checkin + (checkout ? '/' + checkout : '') + '/' + guests + 'adults']);
